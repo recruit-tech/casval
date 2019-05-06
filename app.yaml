@@ -1,0 +1,13 @@
+service: admin-ui
+runtime: python37
+
+handlers:
+  - url: '/admin/'
+    static_files: dist/index.html
+    upload: dist/index.html
+  - url: '/admin/(.*)'
+    static_files: dist/\1
+    upload: dist/(.*)
+  - url: '/admin_assets/(.*)'
+    static_files: dist/admin_assets/\1
+    upload: dist/admin_assets/(.*)
