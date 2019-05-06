@@ -1,0 +1,108 @@
+{
+  "entrance": {
+    "status": {
+      "loaded": "検査結果の読み込みが完了しました",
+      "loading": "検査結果を読み込んでいます",
+      "invalid-token": "認証情報が正しくありません",
+      "restricted-by-ip": "このIPアドレスからのアクセスは禁止されています",
+      "restricted-by-password": "この検査結果はパスワードで保護されています",
+      "audit-not-found": "指定された検査結果は存在しないか、既に削除されています",
+      "unknown-error": "予期しないエラーが発生しました"
+    },
+    "password": "パスワード",
+    "open": "開く"
+  },
+  "home": {
+    "scan": {
+      "status": {
+        "unscheduled": "検査を予約してください",
+        "scheduled": "検査完了までお待ちください",
+        "failure": "検査に失敗しました。再予約してください",
+        "completed": "検査が完了しました",
+        "unsafe": "深刻な脆弱性が検出されました。対策を検討してください",
+        "loading": "検査情報を読み込み中です..."
+      },
+      "date": "YYYY年MM月DD日 (ddd)",
+      "time": "{hour} 時",
+      "datetime": "YYYY年MM月DD日 (ddd) HH時",
+      "start-from": "開始日時",
+      "now": "今すぐ",
+      "date-unspecified": "指定なし",
+      "time-unspecified": "時間指定なし",
+      "end-datetime": "終了期限",
+      "schedule": "検査を予約",
+      "error-general": "スケジュールの登録に失敗しました",
+      "scheduled": "{start} - {end}の間に検査します。",
+      "cancel": "キャンセル",
+      "back": "戻る",
+      "error-deletion": "スケジュールの削除に失敗しました",
+      "result": {
+        "no-critical-issues": "深刻な脆弱性は見つかりませんでした。",
+        "download": "検査結果をダウンロード",
+        "ignore": "修正不要と判断",
+        "reschedule": "再検査を予約",
+        "fill-reason": "修正不要と判断した理由を入力してください（あと {reminingLength} 文字）",
+        "reason": "判断理由",
+        "submit-reason": "判断理由を登録"
+      }
+    },
+    "modal": {
+      "settings": "各種設定",
+      "download-audit": "検査結果をダウンロード",
+      "error-download": "検査結果のダウンロードに失敗しました",
+      "change-contact": "担当者情報を変更",
+      "restrict-access": "このページへのアクセスを制限",
+      "contact-admin": "システム管理者に通知",
+      "contacts": {
+        "title": "担当者情報を登録",
+        "message": "担当者の氏名と連絡先を入力してください。",
+        "name": "氏名",
+        "email": "メールアドレス",
+        "ok": "登録",
+        "cancel": "キャンセル",
+        "error-no-email": "{name} さんのメールアドレスを入力してください",
+        "error-invalid-email": "{email} は正しいメールアドレスではありません",
+        "error-no-name": "氏名を空欄にできません",
+        "error-general": "担当者の登録に失敗しました"
+      },
+      "access-restriction": {
+        "title": "アクセスを制限",
+        "message": "このページで利用するアクセス制限を指定してください。",
+        "ip-restriction": "IPアドレス制限",
+        "enable": "有効",
+        "disable": "無効",
+        "password-restriction": "パスワード制限",
+        "password": "パスワード",
+        "ok": "適用",
+        "cancel": "キャンセル",
+        "error-invalid-password": "{minLength}文字以上のパスワードを入力してください",
+        "error-general": "アクセス制限の適用に失敗しました"
+      }
+    },
+    "target-form": {
+      "ip-address-or-host-name": "検査対象のIPアドレスまたはホスト名を入力",
+      "register-target": "検査対象を登録",
+      "status": {
+        "audit-not-found": "指定された検査は見つかりません",
+        "audit-submitted": "指定された検査は既に結果を提出済みです",
+        "target-is-private-ip": "プライベートIPアドレスは指定できません",
+        "could-not-resolve-target-fqdn": "指定されたFQDNは名前解決できませんでした",
+        "target-is-not-fqdn-or-ipv4": "不正なFQDNやIPv4アドレスが指定されています",
+        "target-is-empty": "検査対象のFQDNまたはIPv4アドレスを入力してください",
+        "invalid-token": "トークンが不正です",
+        "unknown-error": "予期しないエラーが発生しました"
+      }
+    },
+    "audit-status-bar": {
+      "submit-ready": "この検査は提出できる状態です。検査を完了しますか？",
+      "submit-completed": "この検査結果は提出を完了しています。",
+      "submit-approved": "この検査結果は管理者によって承認されました。",
+      "critical-vulnerability-found": "深刻な脆弱性が検出されています。改修して再検査するか、改修しない理由を入力してください。",
+      "submit-failure": "検査結果の提出に失敗しました",
+      "withdraw-failure": "検査結果の取り下げに失敗しました",
+      "submit": "検査を完了",
+      "withdraw": "提出を取り下げる",
+      "withdraw-confirmation": "本当に取り下げてもよろしいですか？"
+    }
+  }
+}
