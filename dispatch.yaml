@@ -1,0 +1,19 @@
+dispatch:
+  - url: "*/audit/*"
+    service: rem
+  - url: "*/auth/*"
+    service: rem
+  - url: "*/handler/*"
+    service: rem
+  - url: "*/scan/*"
+    service: rem
+  - url: "*/vuln/*"
+    service: rem
+
+  - url: "*/admin/*"
+    service: admin-ui
+  - url: "*/admin_assets/*"
+    service: admin-ui
+
+  - url: "*/*"
+    service: ui
