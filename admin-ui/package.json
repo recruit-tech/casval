@@ -1,0 +1,64 @@
+{
+  "name": "casval-admin-ui",
+  "version": "0.5.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "axios": "^0.18.0",
+    "bootstrap": "^4.3.1",
+    "jquery": "^3.4.1",
+    "lodash": "^4.17.11",
+    "moment": "^2.24.0",
+    "popper.js": "^1.15.0",
+    "v-tooltip": "^2.0.2",
+    "vue": "^2.6.10",
+    "vue-i18n": "^8.11.2"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^3.7.0",
+    "@vue/cli-plugin-eslint": "^3.7.0",
+    "@vue/cli-service": "^3.7.0",
+    "@vue/eslint-config-airbnb": "^3.0.5",
+    "node-sass": "^4.12.0",
+    "prettier": "^1.17.0",
+    "prettier-webpack-plugin": "^1.2.0",
+    "sass-loader": "^7.1.0",
+    "vue-template-compiler": "^2.6.10"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/essential",
+      "@vue/airbnb"
+    ],
+    "rules": {
+      "max-len": 0,
+      "no-alert": 0,
+      "no-console": 0,
+      "comma-dangle": 0,
+      "arrow-parens": 0,
+      "function-paren-newline": 0,
+      "import/no-extraneous-dependencies": 0
+    },
+    "parserOptions": {
+      "parser": "babel-eslint"
+    }
+  },
+  "postcss": {
+    "plugins": {
+      "autoprefixer": {}
+    }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 8"
+  ]
+}
