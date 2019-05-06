@@ -1,0 +1,5 @@
+service: rem
+runtime: python37
+
+env_variables:
+  CONFIG_ENV_FILE_PATH: 'config.env'
