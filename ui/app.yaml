@@ -1,0 +1,10 @@
+service: ui
+runtime: python37
+
+handlers:
+  - url: /
+    static_files: dist/index.html
+    upload: dist/index.html
+  - url: /(.*)
+    static_files: dist/\1
+    upload: dist/(.*)

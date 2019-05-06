@@ -1,0 +1,108 @@
+{
+  "entrance": {
+    "status": {
+      "loaded": "Loaded successfully.",
+      "loading": "Now loading...",
+      "invalid-token": "Invalid credentials.",
+      "restricted-by-ip": "You are not allowed to access from that IP address.",
+      "restricted-by-password": "This audit result is password protected.",
+      "audit-not-found": "The audit result you specified does not exist or already removed.",
+      "unknown-error": "Unexpected error occurred."
+    },
+    "password": "Password",
+    "open": "Open"
+  },
+  "home": {
+    "scan": {
+      "status": {
+        "unscheduled": "Schedule a scan session for the target.",
+        "scheduled": "Please, wait until scheduled scan completed.",
+        "failure": "Failed to scan the target, you need to schedule a new scan session for the target.",
+        "completed": "Scan session is complete successfully.",
+        "unsafe": "Critical vulnerabilities has been detected. Please make countermeasures.",
+        "loading": "Loading scan information..."
+      },
+      "date": "DD/MM/YYYY (ddd)",
+      "time": "{hour}:00",
+      "datetime": "DD/MM/YYYY (ddd) HH:00",
+      "start-from": "Scan start from",
+      "now": "From now",
+      "date-unspecified": "Unspecified",
+      "time-unspecified": "No schedule time specified",
+      "end-datetime": "Scan end by",
+      "schedule": "Schedule scan session",
+      "error-general": "Failed to schedule the session",
+      "scheduled": "Scan the target between {start} - {end}.",
+      "cancel": "Cancel",
+      "back": "Back",
+      "error-deletion": "Failed to delete the scan session",
+      "result": {
+        "no-critical-issues": "No critical issues",
+        "download": "Download scan result",
+        "ignore": "Decide not to implement correction",
+        "reschedule": "Reschedule scan session",
+        "fill-reason": "Fill in the reason not to implement correction against the vulnerabilities (remining {reminingLength} characters).",
+        "reason": "Reason for risk acceptance",
+        "submit-reason": "Submit the reason"
+      }
+    },
+    "modal": {
+      "settings": "Settings",
+      "download-audit": "Download audit result",
+      "error-download": "Failed to download the audit result",
+      "change-contact": "Update contact detail",
+      "restrict-access": "Restrict access to this page",
+      "contact-admin": "Contact system administrators",
+      "contacts": {
+        "title": "Change contacts",
+        "message": "Enter names and e-mail addresses of contacts.",
+        "name": "Name",
+        "email": "E-mail",
+        "ok": "Register",
+        "cancel": "Cancel",
+        "error-no-email": "Enter an e-mail address for {name}",
+        "error-invalid-email": "{email} is not a valid e-mail address",
+        "error-no-name": "Name field cannot be empty",
+        "error-general": "Failed to register new contacts"
+      },
+      "access-restriction": {
+        "title": "Access restriction",
+        "message": "Configure the access control for this page.",
+        "ip-restriction": "IP address restriction",
+        "enable": "Enable",
+        "disable": "Disable",
+        "password-restriction": "Password restriction",
+        "password": "Password",
+        "ok": "Apply",
+        "cancel": "Cancel",
+        "error-invalid-password": "Specify password that length is more than or equals to {minLength}",
+        "error-general": "Failed to apply access control"
+      }
+    },
+    "target-form": {
+      "ip-address-or-host-name": "Enter an IP address or host name to audit",
+      "register-target": "Register scan target",
+      "status": {
+        "audit-not-found": "Specified audit doesn't exist or has been removed.",
+        "audit-submitted": "Specified audit has been submitted.",
+        "target-is-private-ip": "Private IP address is not allowed to specify.",
+        "could-not-resolve-target-fqdn": "Could not resolve specified FQDN.",
+        "target-is-not-fqdn-or-ipv4": "Specified scan target is not a FQDN or an IP address.",
+        "target-is-empty": "Enter a scan target FQDN or IP address.",
+        "invalid-token": "Invalid token",
+        "unknown-error": "Unexpected error occurred."
+      }
+    },
+    "audit-status-bar": {
+      "submit-ready": "You can finish and submit the audit result. Do you want to finish this audit?",
+      "submit-completed": "This audit result has been submitted.",
+      "submit-approved": "This audit result has been approved by administrators.",
+      "critical-vulnerability-found": "Critical vulnerabilities has been detected. You need to request the next scan session after the correction or inform the reason not to fix those vulnerabilities.",
+      "submit-failure": "Failed to submit the audit result.",
+      "withdraw-failure": "Failed to withdraw the audit result.",
+      "submit": "Submit",
+      "withdraw": "Withdraw",
+      "withdraw-confirmation": "Are you sure to withdraw the submission?"
+    }
+  }
+}
