@@ -2,11 +2,9 @@
 
 A <u>cas</u>ual <u>v</u>ulnerability <u>a</u>n<u>al</u>yzer, that makes platform security audit more casual.
 
-## Demo
-
 ![screenshot](https://user-images.githubusercontent.com/3012367/57343095-df6f2f80-717c-11e9-8e18-f7b6b7276836.gif)
 
-## Deployment
+## How to Deploy
 
 Get all the stuff at first.
 
