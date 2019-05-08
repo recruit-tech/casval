@@ -1,4 +1,4 @@
-<img src="ui/src/assets/logo-grey.svg" width="300">
+<img src="ui/src/assets/logo-grey.svg" width="150">
 
 A <u>cas</u>ual <u>v</u>ulnerability <u>a</u>n<u>al</u>yzer, that makes platform security audit more casual.
 
