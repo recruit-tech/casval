@@ -2,7 +2,12 @@
 
 ## Project setup
 ```
-npm install
+npm ci
+```
+
+### Lints and fixes files
+```
+npm run lint
 ```
 
 ### Compiles and hot-reloads for development
@@ -10,12 +15,8 @@ npm install
 npm run serve
 ```
 
-### Compiles and minifies for production
+### Compiles and deploy on GAE for production
 ```
 npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
+gcloud app deploy
 ```
