@@ -8,7 +8,7 @@ click==7.0
 decorator==4.4.0
 flask-cors==3.0.7
 flask-jwt-extended==3.18.1
-flask-marshmallow==0.10.0
+flask-marshmallow==0.10.1
 flask-restplus==0.12.1
 flask==1.0.2
 google-api-core==1.10.0

@@ -1,4 +1,5 @@
 from flask import abort
+from flask import request
 from flask_restplus import Namespace
 from flask_restplus import Resource
 
@@ -17,6 +18,9 @@ api = Namespace("handler")
 class TaskHandler(Resource):
     def get(self, task):
         """Invoke task handlers"""
+
+        if not request.headers.get("X-AppEngine-Cron") == "true":
+            abort(401, "X-AppEngine-Cron header is missing")
 
         if task == "pending":
             PendingTask().handle()

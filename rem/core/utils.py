@@ -5,6 +5,8 @@ import os
 import re
 import socket
 from datetime import datetime
+from functools import wraps
+from time import time
 
 import validators
 from flask import current_app as app
@@ -78,3 +80,15 @@ class Utils:
     @staticmethod
     def get_default_datetime():
         return datetime(1, 1, 1)
+
+
+def timing(f):
+    @wraps(f)
+    def wrap(*args, **kwargs):
+        start = time()
+        result = f(*args, **kwargs)
+        end = time()
+        print("[Timing] Func: {}, Args: {}, Elapsed: {:.2f} sec".format(f.__name__, args, end - start))
+        return result
+
+    return wrap

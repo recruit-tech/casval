@@ -24,6 +24,7 @@ isort = "*"
 autoflake = "*"
 pip = "*"
 black = "==19.3b0"
+gunicorn = "*"
 
 [scripts]
 format = "sh -c \"autoflake -i --remove-all-unused-imports --remove-unused-variables -r .; isort --recursive --force-single-line .; black -l 110 -t py37 .;\""

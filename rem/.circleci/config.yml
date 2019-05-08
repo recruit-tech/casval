@@ -1,0 +1,46 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/python:3.7
+        environment:
+          DB_NAME: casval
+          DB_USER: root
+          DB_PASSWORD: Passw0rd!
+          DB_ENDPOINT: 127.0.0.1
+          DB_PORT: 3306
+          FLASK_APP: main.py
+          FLASK_ENV: development
+      - image: circleci/mysql:5.7
+        environment:
+          MYSQL_DATABASE: casval
+          MYSQL_ROOT_PASSWORD: Passw0rd!
+        command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: pipenv install -d
+      - run:
+          name: Check code format with autoflake
+          command: pipenv run autoflake -i -c --remove-all-unused-imports --remove-unused-variables -r .
+      - run:
+          name: Check code format with isort
+          command: pipenv run isort --recursive --check-only --force-single-line .
+      - run:
+          name: Check code format with black
+          command: pipenv run black -l 110 -t py37 --check .
+      - run:
+          name: Run gunicorn
+          command: pipenv run gunicorn -b 127.0.0.1:5000 -D main:app
+      - run:
+          name: Wait for Flask to run
+          command: dockerize -wait tcp://127.0.0.1:5000 -timeout 120s
+      - run:
+          name: Wait for database to setup
+          command: dockerize -wait tcp://127.0.0.1:3306 -timeout 120s
+      - run:
+          name: Run simpleendpoint inspection
+          command: |
+            curl -f -X POST "http://localhost:5000/auth/" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"password\": \"admin-password\"}"
+            curl -f -X GET "http://localhost:5000/handler/pending/" -H "accept: application/json" -H "X-AppEngine-Cron: true"

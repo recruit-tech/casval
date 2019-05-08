@@ -55,8 +55,10 @@ app.config["SWAGGER_UI_JSONEDITOR"] = True
 
 api.init_app(app)
 db.init_app(app)
-db.database.create_tables([AuditTable, ContactTable, ScanTable, TaskTable, VulnTable, ResultTable])
 jwt.init_app(app)
 jwt._set_error_handler_callbacks(api)
 marshmallow.init_app(app)
 CORS(app, origins=app.config["PERMITTED_ORIGINS"])
+
+with db.database:
+    db.database.create_tables([AuditTable, ContactTable, ScanTable, TaskTable, VulnTable, ResultTable])
