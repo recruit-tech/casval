@@ -96,6 +96,8 @@ export default {
     this.auditUUID = window.location.hash.substring(2).replace('/', '') || '';
     this.auditUUID += '00000000';
 
+    window.onhashchange = () => window.location.reload();
+
     window.eventBus.$on('TOKEN_REQUESTED', password => {
       this.generateToken(password);
     });
