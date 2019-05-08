@@ -19,7 +19,7 @@ variable "region" {
 }
 
 variable "project" {
-  default = "frank1"
+  default = "{YOUR_PROJECT_NAME}"
 }
 
 output "DB_NAME" {

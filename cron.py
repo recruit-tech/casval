@@ -50,7 +50,9 @@ def handleDeletedTask():
 
 
 def invoke(endpoint):
-    return requests.get(REQUEST_SCHEMA + os.getenv("SERVER_NAME", "127.0.0.1:5000") + endpoint)
+    headers = {"X-AppEngine-Cron": "true"}
+    url = REQUEST_SCHEMA + os.getenv("SERVER_NAME", "127.0.0.1:5000") + endpoint
+    return requests.get(url, headers=headers)
 
 
 def main():

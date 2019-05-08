@@ -17,6 +17,7 @@ from .models import db
 from .scanners import OpenVASScanner as Scanner
 from .scanners import ScanStatus
 from .utils import Utils
+from .utils import timing
 
 if len(os.getenv("CONFIG_ENV_FILE_PATH", "")) > 0:
     # for production environment
@@ -41,6 +42,7 @@ class BaseTask:
     def __init__(self, progress):
         self.progress = progress
 
+    @timing
     def handle(self):
         for task in self._get_tasks():
             try:
