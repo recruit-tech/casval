@@ -22,8 +22,8 @@ class OpenVASScanner:
 
     def __init__(self, session=None):
 
-        self.host = os.getenv("OPENVAS_ENDPOINT", "127.0.0.1")
-        self.port = int(os.getenv("OPENVAS_PORT", "9390"))
+        self.host = os.getenv("OPENVAS_MANAGER_ENDPOINT", "127.0.0.1")
+        self.port = int(os.getenv("OPENVAS_MANAGER_PORT", "9390"))
         self.user = os.getenv("OPENVAS_USERNAME", "admin")
         self.password = os.getenv("OPENVAS_PASSWORD", "admin")
         self.profile = os.getenv("OPENVAS_PROFILE", "Full and very deep")
@@ -142,6 +142,10 @@ class OpenVASScanner:
         app.logger.info("[Scanner] Trying to connect to {}:{} ...".format(self.host, self.port))
 
         return VulnscanManager(self.host, self.user, self.password, self.port, self.DEFAULT_TIMEOUT)
+
+    @classmethod
+    def get_info(cls):
+        return {"source_ip": os.getenv("OPENVAS_SCAN_ENDPOINT", "127.0.0.1")}
 
     @classmethod
     def parse_report(cls, report_txt):

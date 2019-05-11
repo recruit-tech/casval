@@ -38,6 +38,7 @@ ScanOutputModel = api.model(
         "uuid": fields.String(required=True, attribute=lambda scan: scan["uuid"].hex),
         "error_reason": fields.String(required=True),
         "comment": fields.String(required=True),
+        "source_ip": fields.String(required=True),
         "created_at": fields.DateTime(required=True),
         "updated_at": fields.DateTime(required=True),
         "scheduled": fields.Boolean(required=True),

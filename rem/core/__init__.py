@@ -9,6 +9,7 @@ from .models import VulnTable  # noqa
 from .models import db  # noqa
 from .resources import AuditResource  # noqa
 from .resources import ScanResource  # noqa
+from .scanners import OpenVASScanner as Scanner  # noqa
 from .tasks import DeletedTask  # noqa
 from .tasks import FailedTask  # noqa
 from .tasks import PendingTask  # noqa
