@@ -33,6 +33,7 @@
       "schedule": "Schedule scan session",
       "error-general": "Failed to schedule the session",
       "scheduled": "Scan the target between {start} - {end}.",
+      "source-ip-notification": "The audit attempts will be coming from {sourceIp}.",
       "cancel": "Cancel",
       "back": "Back",
       "error-deletion": "Failed to delete the scan session",
@@ -77,6 +78,12 @@
         "cancel": "Cancel",
         "error-invalid-password": "Specify password that length is more than or equals to {minLength}",
         "error-general": "Failed to apply access control"
+      },
+      "scan-warning": {
+        "title": "Caution",
+        "message": "The security audit attempts will be coming from <b>{sourceIp}</b>.<br>Please add the source IP address to the whitelists in your access restriction or intrusion monitoring systems prior to the audit.",
+        "cancel": "Cancel",
+        "schedule": "Schedule"
       }
     },
     "target-form": {

@@ -59,16 +59,19 @@
           <font-awesome-icon icon="arrow-left"></font-awesome-icon>
           {{ $t('home.scan.back') }}
         </button>
-        <button class="btn btn-primary" @click="setSchedule">
+        <button class="btn btn-primary" @click="schedule">
           <font-awesome-icon icon="clock"></font-awesome-icon> {{ $t('home.scan.schedule') }}
         </button>
       </div>
     </div>
+    <modal-scan-warning :modal-id="modalId" :source-ip="sourceIp" @set-schedule="setSchedule" />
   </div>
 </template>
 
 <script>
+import $ from 'jquery';
 import moment from 'moment';
+import ModalScanWarning from './ModalScanWarning.vue';
 
 export default {
   name: 'ScanPanelScheduler',
@@ -82,8 +85,13 @@ export default {
       required: true
     }
   },
+  components: {
+    ModalScanWarning
+  },
   data() {
     return {
+      modalId: `modal-scan-warning-${this.scan.uuid}`,
+      sourceIp: this.scan.source_ip,
       currentTime: null,
       errorMessage: this.scan.error_reason,
       startDate: '',
@@ -93,6 +101,9 @@ export default {
     };
   },
   methods: {
+    schedule: function schedule() {
+      $(`#${this.modalId}`).modal('show');
+    },
     cancelReschedule: async function cancelReschedule() {
       this.$parent.requireReschedule = false;
     },

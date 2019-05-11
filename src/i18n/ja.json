@@ -33,6 +33,7 @@
       "schedule": "検査を予約",
       "error-general": "スケジュールの登録に失敗しました",
       "scheduled": "{start} - {end}の間に検査します。",
+      "source-ip-notification": "検査元のIPアドレスは「{sourceIp}」です。",
       "cancel": "キャンセル",
       "back": "戻る",
       "error-deletion": "スケジュールの削除に失敗しました",
@@ -77,6 +78,12 @@
         "cancel": "キャンセル",
         "error-invalid-password": "{minLength}文字以上のパスワードを入力してください",
         "error-general": "アクセス制限の適用に失敗しました"
+      },
+      "scan-warning": {
+        "title": "注意",
+        "message": "セキュリティ検査はIPアドレス「<b>{sourceIp}</b>」から行います。<br>アクセス制限の変更や、通信の非監視を事前に済ませてください。",
+        "cancel": "キャンセル",
+        "schedule": "検査を予約する"
       }
     },
     "target-form": {
