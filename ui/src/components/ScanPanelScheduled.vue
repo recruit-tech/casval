@@ -2,17 +2,14 @@
   <div>
     <div class="pb-1">
       <small class="text-dark">
-        {{ schedule }}
+        {{ schedule }}<br />
+        {{ $t('home.scan.source-ip-notification', { sourceIp: scan.source_ip }) }}
       </small>
     </div>
     <div class="pt-3">
       <div class="form-row">
         <div class="col text-right">
-          <button
-            class="
-          btn btn-dark"
-            @click="deleteScanSchedule"
-          >
+          <button class="btn btn-dark" @click="deleteScanSchedule">
             {{ $t('home.scan.cancel') }}
           </button>
         </div>

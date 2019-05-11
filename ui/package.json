@@ -10,21 +10,21 @@
   "dependencies": {
     "@fortawesome/fontawesome": "^1.1.8",
     "@fortawesome/fontawesome-free-solid": "^5.0.13",
-    "@fortawesome/fontawesome-svg-core": "^1.2.1",
-    "@fortawesome/vue-fontawesome": "^0.1.1",
+    "@fortawesome/fontawesome-svg-core": "^1.2.18",
+    "@fortawesome/vue-fontawesome": "^0.1.6",
     "axios": "^0.18.0",
-    "bootstrap": "^4.1.1",
+    "bootstrap": "^4.3.1",
     "jquery": "^3.4.1",
     "moment": "^2.24.0",
-    "popper.js": "^1.14.3",
-    "vue": "^2.5.22",
+    "popper.js": "^1.15.0",
+    "vue": "^2.6.10",
     "vue-i18n": "^8.11.2"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.7.0",
     "@vue/cli-plugin-eslint": "^3.7.0",
     "@vue/cli-service": "^3.7.0",
-    "@vue/eslint-config-airbnb": "^3.0.0-rc.5",
+    "@vue/eslint-config-airbnb": "^4.0.0",
     "prettier": "^1.17.0",
     "prettier-webpack-plugin": "^1.2.0",
     "vue-template-compiler": "^2.6.10"

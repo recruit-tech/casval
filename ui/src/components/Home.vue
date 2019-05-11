@@ -70,9 +70,11 @@ import TargetForm from './TargetForm.vue';
 function getScanStatus(scan) {
   if (scan.scheduled === true) {
     return 'scheduled';
-  } else if (scan.scheduled === false && scan.processed === false) {
+  }
+  if (scan.scheduled === false && scan.processed === false) {
     return 'unscheduled';
-  } else if (scan.scheduled === false && scan.processed === true) {
+  }
+  if (scan.scheduled === false && scan.processed === true) {
     if (scan.error_reason.length > 0) {
       return 'failure';
     }
