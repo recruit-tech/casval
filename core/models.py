@@ -53,6 +53,7 @@ class ScanTable(db.Model):
     task_uuid = UUIDField(unique=True, null=True, default=None)
     processed = BooleanField(default=False)
     comment = TextField(default="")
+    source_ip = CharField(default="")
     created_at = DateTimeField(constraints=[SQL("DEFAULT CURRENT_TIMESTAMP")])
     updated_at = DateTimeField(constraints=[SQL("DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")])
 

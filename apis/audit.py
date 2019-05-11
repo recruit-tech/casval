@@ -24,6 +24,7 @@ from core import ContactSchema
 from core import ContactTable
 from core import ResultTable
 from core import ScanInputSchema
+from core import Scanner
 from core import ScanResource
 from core import ScanTable
 from core import Utils
@@ -438,6 +439,9 @@ class AuditScan(AuditResource):
         # i.e., 'AAAAAAAA-AAAA-AAAA-AAAA-AAAABBBBBBBB'.
         params["uuid"] = uuid.UUID(audit_uuid[0:24] + secrets.token_hex(4))
         params["audit_id"] = AuditResource.get_audit_id_by_uuid(audit_uuid)
+
+        scanner_info = Scanner.get_info()
+        params["source_ip"] = scanner_info["source_ip"]
 
         scan_insert_query = ScanTable(**params)
         scan_insert_query.save()
