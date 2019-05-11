@@ -51,7 +51,7 @@
     "title": "Title",
     "previous": "Previous",
     "next": "Next",
-    "fix-required": "修正要否",
+    "fix-required": "Fix Required",
     "choose-fix-required": "Choose Required Level...",
     "fix-required-required": "Required",
     "fix-required-recommended": "Recommended",
