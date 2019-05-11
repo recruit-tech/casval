@@ -33,7 +33,6 @@ In `casval/admin-ui`, run the following commands.
 
 ```
 npm ci
-npm run build
 npm run serve
 ```
 
@@ -41,7 +40,6 @@ In `casval/ui`, run the following commands.
 
 ```
 npm ci
-npm run build
 npm run serve
 ```
 
