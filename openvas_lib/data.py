@@ -52,21 +52,21 @@ class _Common(object):
 # ------------------------------------------------------------------------------
 class OpenVASPort(object):
     """
-	Port definition.
-	"""
+    Port definition.
+    """
 
     # ----------------------------------------------------------------------
     def __init__(self, port_name, number, proto):
         """
-		:param port_name: service name asociated (/etc/services). i.e: http
-		:type port_name: str
+        :param port_name: service name asociated (/etc/services). i.e: http
+        :type port_name: str
 
-		:param number: port number
-		:type number: int
+        :param number: port number
+        :type number: int
 
-		:param proto: network protocol: tcp, udp, icmp..
-		:type proto: str
-		"""
+        :param proto: network protocol: tcp, udp, icmp..
+        :type proto: str
+        """
         if not isinstance(port_name, str):
             raise TypeError("Expected string, got %r instead" % type(port_name))
 
@@ -88,27 +88,27 @@ class OpenVASPort(object):
     @property
     def proto(self):
         """
-		:return: network protocol: tcp, udp, icmp...
-		:rtype: str
-		"""
+        :return: network protocol: tcp, udp, icmp...
+        :rtype: str
+        """
         return self.__proto
 
     # ----------------------------------------------------------------------
     @property
     def number(self):
         """
-		:return: port number. None if not available.
-		:rtype: float
-		"""
+        :return: port number. None if not available.
+        :rtype: float
+        """
         return self.__number
 
     # ----------------------------------------------------------------------
     @property
     def port_name(self):
         """
-		:return: service name asociated (/etc/services). i.e: http
-		:rtype: str
-		"""
+        :return: service name asociated (/etc/services). i.e: http
+        :rtype: str
+        """
         return self.__port_name
 
     # ----------------------------------------------------------------------
@@ -119,8 +119,8 @@ class OpenVASPort(object):
 # ----------------------------------------------------------------------
 class OpenVASNVT(_Common):
     """
-	OpenVas NVT structure.
-	"""
+    OpenVas NVT structure.
+    """
 
     # ----------------------------------------------------------------------
     def __init__(self):
@@ -147,17 +147,17 @@ class OpenVASNVT(_Common):
     @property
     def oid(self):
         """
-		:return:
-		:rtype: str
-		"""
+        :return:
+        :rtype: str
+        """
         return self.__oid
 
     # ----------------------------------------------------------------------
     @oid.setter
     def oid(self, val):
         """
-		:type val: str
-		"""
+        :type val: str
+        """
         if not isinstance(val, str):
             raise TypeError("Expected string, got %r instead" % type(val))
 
@@ -167,17 +167,17 @@ class OpenVASNVT(_Common):
     @property
     def name(self):
         """
-		:return: the name of NVT
-		:rtype: str
-		"""
+        :return: the name of NVT
+        :rtype: str
+        """
         return self.__name
 
     # ----------------------------------------------------------------------
     @name.setter
     def name(self, val):
         """
-		:type val: str
-		"""
+        :type val: str
+        """
         if not isinstance(val, str):
             raise TypeError("Expected string, got %r instead" % type(val))
 
@@ -187,18 +187,18 @@ class OpenVASNVT(_Common):
     @property
     def cvss_base_vector(self):
         """
-		:return: CVSS Base calculated
-		:rtype: float
-		"""
+        :return: CVSS Base calculated
+        :rtype: float
+        """
         return self.__cvss_base_vector
 
     # ----------------------------------------------------------------------
     @cvss_base_vector.setter
     def cvss_base_vector(self, val):
         """
-		:param val: CVSS Base calculated
-		:type val: float
-		"""
+        :param val: CVSS Base calculated
+        :type val: float
+        """
         if not isinstance(val, str):
             raise TypeError("Expected str, got %r instead" % type(val))
 
@@ -208,18 +208,18 @@ class OpenVASNVT(_Common):
     @property
     def cvss_base(self):
         """
-		:return: CVSS Base calculated
-		:rtype: float
-		"""
+        :return: CVSS Base calculated
+        :rtype: float
+        """
         return self.__cvss_base
 
     # ----------------------------------------------------------------------
     @cvss_base.setter
     def cvss_base(self, val):
         """
-		:param val: CVSS Base calculated
-		:type val: float
-		"""
+        :param val: CVSS Base calculated
+        :type val: float
+        """
         m = None
         if isinstance(val, (str, int, float)):
             try:
@@ -242,18 +242,18 @@ class OpenVASNVT(_Common):
     @property
     def risk_factor(self):
         """
-		:return: the risk factor
-		:rtype: int
-		"""
+        :return: the risk factor
+        :rtype: int
+        """
         return self.__risk_factor
 
     # ----------------------------------------------------------------------
     @risk_factor.setter
     def risk_factor(self, val):
         """
-		:param val: the risk factor
-		:type val: int
-		"""
+        :param val: the risk factor
+        :type val: int
+        """
         if not isinstance(val, str):
             raise TypeError("Expected int, got %r instead" % type(val))
         if val not in self.risk_levels:
@@ -268,18 +268,18 @@ class OpenVASNVT(_Common):
     @property
     def summary(self):
         """
-		:return: The summary
-		:rtype: str
-		"""
+        :return: The summary
+        :rtype: str
+        """
         return self.__summary
 
     # ----------------------------------------------------------------------
     @summary.setter
     def summary(self, val):
         """
-		:param val: The summary
-		:type val: str
-		"""
+        :param val: The summary
+        :type val: str
+        """
         if not isinstance(val, str):
             raise TypeError("Expected string, got %r instead" % type(val))
 
@@ -289,18 +289,18 @@ class OpenVASNVT(_Common):
     @property
     def description(self):
         """
-		:return: The raw_description of NVT
-		:rtype: str
-		"""
+        :return: The raw_description of NVT
+        :rtype: str
+        """
         return self.__description
 
     # ----------------------------------------------------------------------
     @description.setter
     def description(self, val):
         """
-		:param val: The raw_description of NVT
-		:type val: str
-		"""
+        :param val: The raw_description of NVT
+        :type val: str
+        """
         if not isinstance(val, str):
             raise TypeError("Expected string, got %r instead" % type(val))
 
@@ -310,18 +310,18 @@ class OpenVASNVT(_Common):
     @property
     def family(self):
         """
-		:return: The family of NVT
-		:rtype: str
-		"""
+        :return: The family of NVT
+        :rtype: str
+        """
         return self.__family
 
     # ----------------------------------------------------------------------
     @family.setter
     def family(self, val):
         """
-		:param val: The family of NVT
-		:type val: str
-		"""
+        :param val: The family of NVT
+        :type val: str
+        """
         if not isinstance(val, str):
             raise TypeError("Expected string, got %r instead" % type(val))
 
@@ -331,18 +331,18 @@ class OpenVASNVT(_Common):
     @property
     def category(self):
         """
-		:return: The category that the NVT belongs
-		:rtype: str
-		"""
+        :return: The category that the NVT belongs
+        :rtype: str
+        """
         return self.__category
 
     # ----------------------------------------------------------------------
     @category.setter
     def category(self, val):
         """
-		:param val: The category that the NVT belongs
-		:type val: str
-		"""
+        :param val: The category that the NVT belongs
+        :type val: str
+        """
         if not isinstance(val, str):
             raise TypeError("Expected  str, got %r instead" % type(val))
 
@@ -352,90 +352,90 @@ class OpenVASNVT(_Common):
     @property
     def cve(self):
         """
-		:return: the CVE associated
-		:rtype: str
-		"""
+        :return: the CVE associated
+        :rtype: str
+        """
         return self.__cves
 
     # ----------------------------------------------------------------------
     @cve.setter
     def cve(self, val):
         """
-		:param val: the CVE associated
-		:type val: str
-		"""
+        :param val: the CVE associated
+        :type val: str
+        """
         self.__set_list_value(self.__cves, val)
 
     # ----------------------------------------------------------------------
     @property
     def bid(self):
         """
-		:return: The BID number associated
-		:rtype: str
-		"""
+        :return: The BID number associated
+        :rtype: str
+        """
         return self.__bids
 
     # ----------------------------------------------------------------------
     @bid.setter
     def bid(self, val):
         """
-		:param val: The BID number associated
-		:type val: str
-		"""
+        :param val: The BID number associated
+        :type val: str
+        """
         self.__set_list_value(self.__bids, val)
 
     # ----------------------------------------------------------------------
     @property
     def bugtraq(self):
         """
-		:return: The Bugtraq ID associated
-		:rtype: str
-		"""
+        :return: The Bugtraq ID associated
+        :rtype: str
+        """
         return self.__bugtraqs
 
     # ----------------------------------------------------------------------
     @bugtraq.setter
     def bugtraq(self, val):
         """
-		:param val: The Bugtraq ID associated
-		:type val: str
-		"""
+        :param val: The Bugtraq ID associated
+        :type val: str
+        """
         self.__set_list_value(self.__bugtraqs, val)
 
     # ----------------------------------------------------------------------
     @property
     def xrefs(self):
         """
-		:return: The xrefs associated
-		:rtype: str
-		"""
+        :return: The xrefs associated
+        :rtype: str
+        """
         return self.__xrefs
 
     # ----------------------------------------------------------------------
     @xrefs.setter
     def xrefs(self, val):
         """
-		:param val: The xrefs associated
-		:type val: str
-		"""
+        :param val: The xrefs associated
+        :type val: str
+        """
         self.__set_list_value(self.__xrefs, val)
 
     # ----------------------------------------------------------------------
     @property
     def fingerprints(self):
         """
-		:return: The fingerprints associated
-		:rtype: str
-		"""
+        :return: The fingerprints associated
+        :rtype: str
+        """
         return self.__fingerprints
 
     # ----------------------------------------------------------------------
     @fingerprints.setter
     def fingerprints(self, val):
         """
-		:param val: The fingerprints associated
-		:type val: str
-		"""
+        :param val: The fingerprints associated
+        :type val: str
+        """
         if not isinstance(val, str):
             raise TypeError("Expected string, got %r instead" % type(val))
 
@@ -445,32 +445,32 @@ class OpenVASNVT(_Common):
     @property
     def tags(self):
         """
-		:return: The tags associated
-		:rtype: str
-		"""
+        :return: The tags associated
+        :rtype: str
+        """
         return self.__tags
 
     # ----------------------------------------------------------------------
     @tags.setter
     def tags(self, val):
         """
-		:param val: The tags associated
-		:type val: str
-		"""
+        :param val: The tags associated
+        :type val: str
+        """
         self.__set_list_value(self.__tags, val)
 
     # ----------------------------------------------------------------------
     def __set_list_value(self, prop, val):
         """
-		Checks if value is a string of a list and add the new value to it.
+        Checks if value is a string of a list and add the new value to it.
 
-		:param prop: object property
-		:type prop: property
+        :param prop: object property
+        :type prop: property
 
-		:param val: value
-		:type val: str|list
+        :param val: value
+        :type val: str|list
 
-		"""
+        """
         if isinstance(val, str):
             if val != "":
                 prop.append(val)
@@ -484,8 +484,8 @@ class OpenVASNVT(_Common):
 # ------------------------------------------------------------------------------
 class OpenVASOverride(_Common):
     """
-	Override object of OpenVas results.
-	"""
+    Override object of OpenVas results.
+    """
 
     # ----------------------------------------------------------------------
     def __init__(self):
@@ -503,17 +503,17 @@ class OpenVASOverride(_Common):
     @property
     def oid(self):
         """
-		:return:
-		:rtype: str
-		"""
+        :return:
+        :rtype: str
+        """
         return self.__nvt_oid
 
     # ----------------------------------------------------------------------
     @oid.setter
     def oid(self, val):
         """
-		:type val: str
-		"""
+        :type val: str
+        """
         if not isinstance(val, str):
             raise TypeError("Expected string, got %r instead" % type(val))
 
@@ -523,17 +523,17 @@ class OpenVASOverride(_Common):
     @property
     def name(self):
         """
-		:return: The name of the NVT
-		:rtype: str
-		"""
+        :return: The name of the NVT
+        :rtype: str
+        """
         return self.__nvt_name
 
     # ----------------------------------------------------------------------
     @name.setter
     def name(self, val):
         """
-		:type val: str
-		"""
+        :type val: str
+        """
         if not isinstance(val, str):
             raise TypeError("Expected string, got %r instead" % type(val))
 
@@ -543,17 +543,17 @@ class OpenVASOverride(_Common):
     @property
     def text(self):
         """
-		:return:
-		:rtype: str
-		"""
+        :return:
+        :rtype: str
+        """
         return self.__text
 
     # ----------------------------------------------------------------------
     @text.setter
     def text(self, val):
         """
-		:type val: str
-		"""
+        :type val: str
+        """
         if not isinstance(val, str):
             raise TypeError("Expected string, got %r instead" % type(val))
 
@@ -563,17 +563,17 @@ class OpenVASOverride(_Common):
     @property
     def text_is_excerpt(self):
         """
-		:return: The text is an excerpt?
-		:rtype: bool
-		"""
+        :return: The text is an excerpt?
+        :rtype: bool
+        """
         return self.__text_is_excerpt
 
     # ----------------------------------------------------------------------
     @text_is_excerpt.setter
     def text_is_excerpt(self, val):
         """
-		:type val: bool
-		"""
+        :type val: bool
+        """
         if not isinstance(val, bool):
             raise TypeError("Expected  bool, got %r instead" % type(val))
 
@@ -583,17 +583,17 @@ class OpenVASOverride(_Common):
     @property
     def threat(self):
         """
-		:return: one of these values: Critical|High|Medium|Low|None|Log|Debug
-		:rtype: str
-		"""
+        :return: one of these values: Critical|High|Medium|Low|None|Log|Debug
+        :rtype: str
+        """
         return self.__threat
 
     # ----------------------------------------------------------------------
     @threat.setter
     def threat(self, val):
         """
-		:type val: str - (Critical|High|Medium|Low|None|Log|Debug)
-		"""
+        :type val: str - (Critical|High|Medium|Low|None|Log|Debug)
+        """
         if not isinstance(val, str):
             raise TypeError("Expected  str - (), got %r instead" % type(val))
         if val not in self.risk_levels:
@@ -608,17 +608,17 @@ class OpenVASOverride(_Common):
     @property
     def new_threat(self):
         """
-		:return: one of these values: Critical|High|Medium|Low|None|Log|Debug
-		:rtype: str
-		"""
+        :return: one of these values: Critical|High|Medium|Low|None|Log|Debug
+        :rtype: str
+        """
         return self.__new_threat
 
     # ----------------------------------------------------------------------
     @new_threat.setter
     def new_threat(self, val):
         """
-		:type val: str - (Critical|High|Medium|Low|None|Log|Debug)
-		"""
+        :type val: str - (Critical|High|Medium|Low|None|Log|Debug)
+        """
         if not isinstance(val, str):
             raise TypeError("Expected  str - (), got %r instead" % type(val))
         if val not in self.risk_levels:
@@ -633,17 +633,17 @@ class OpenVASOverride(_Common):
     @property
     def orphan(self):
         """
-		:return:  indicates if the NVT is orphan
-		:rtype: bool
-		"""
+        :return:  indicates if the NVT is orphan
+        :rtype: bool
+        """
         return self.__orphan
 
     # ----------------------------------------------------------------------
     @orphan.setter
     def orphan(self, val):
         """
-		:type val: bool
-		"""
+        :type val: bool
+        """
         if not isinstance(val, bool):
             raise TypeError("Expected bool, got %r instead" % type(val))
 
@@ -653,8 +653,8 @@ class OpenVASOverride(_Common):
 # ------------------------------------------------------------------------------
 class OpenVASNotes(object):
     """
-	Store the notes for a results object.
-	"""
+    Store the notes for a results object.
+    """
 
     # ----------------------------------------------------------------------
     def __init__(self, oid, name, text, text_is_excerpt, orphan):
@@ -680,53 +680,53 @@ class OpenVASNotes(object):
     @property
     def oid(self):
         """
-		:return:
-		:rtype: str
-		"""
+        :return:
+        :rtype: str
+        """
         return self.__nvt_oid
 
     # ----------------------------------------------------------------------
     @property
     def name(self):
         """
-		:return: The name of the note
-		:rtype: str
-		"""
+        :return: The name of the note
+        :rtype: str
+        """
         return self.__nvt_name
 
     # ----------------------------------------------------------------------
     @property
     def text(self):
         """
-		:return: text related with the note
-		:rtype: str
-		"""
+        :return: text related with the note
+        :rtype: str
+        """
         return self.__text
 
     # ----------------------------------------------------------------------
     @property
     def text_is_excerpt(self):
         """
-		:return: indicates if the text is an excerpt
-		:rtype: bool
-		"""
+        :return: indicates if the text is an excerpt
+        :rtype: bool
+        """
         return self.__text_is_excerpt
 
     # ----------------------------------------------------------------------
     @property
     def orphan(self):
         """
-		:return: indicates if the note is orphan
-		:rtype: bool
-		"""
+        :return: indicates if the note is orphan
+        :rtype: bool
+        """
         return self.__orphan
 
 
 # ------------------------------------------------------------------------------
 class OpenVASResult(_Common):
     """
-	Main structure to store audit results.
-	"""
+    Main structure to store audit results.
+    """
 
     # ----------------------------------------------------------------------
     def __init__(self):
@@ -739,6 +739,8 @@ class OpenVASResult(_Common):
         self.__description = None
         self.__notes = None
         self.__overrides = None
+        self.__severity = None
+        self.__name = None
 
         # auto generated
         self.__impact = ""
@@ -776,17 +778,17 @@ class OpenVASResult(_Common):
     @property
     def id(self):
         """
-		:return: the id
-		:rtype: str
-		"""
+        :return: the id
+        :rtype: str
+        """
         return self.__id
 
     # ----------------------------------------------------------------------
     @id.setter
     def id(self, val):
         """
-		:type val: str
-		"""
+        :type val: str
+        """
         if not isinstance(val, str):
             raise TypeError("Expected string, got %r instead" % type(val))
 
@@ -796,17 +798,17 @@ class OpenVASResult(_Common):
     @property
     def host(self):
         """
-		:return: the target
-		:rtype: str
-		"""
+        :return: the target
+        :rtype: str
+        """
         return self.__host
 
     # ----------------------------------------------------------------------
     @host.setter
     def host(self, val):
         """
-		:type val: str
-		"""
+        :type val: str
+        """
         if not isinstance(val, str):
             raise TypeError("Expected string, got %r instead" % type(val))
 
@@ -816,16 +818,16 @@ class OpenVASResult(_Common):
     @property
     def port(self):
         """
-		:rtype: OpenVASPort
-		"""
+        :rtype: OpenVASPort
+        """
         return self.__port
 
     # ----------------------------------------------------------------------
     @port.setter
     def port(self, val):
         """
-		:type val: OpenVASPort
-		"""
+        :type val: OpenVASPort
+        """
         if not isinstance(val, OpenVASPort):
             raise TypeError("Expected int, got %r instead" % type(val))
 
@@ -835,17 +837,17 @@ class OpenVASResult(_Common):
     @property
     def subnet(self):
         """
-		:return: the network
-		:rtype: str
-		"""
+        :return: the network
+        :rtype: str
+        """
         return self.__subnet
 
     # ----------------------------------------------------------------------
     @subnet.setter
     def subnet(self, val):
         """
-		:type val: str
-		"""
+        :type val: str
+        """
         if not isinstance(val, str):
             raise TypeError("Expected string, got %r instead" % type(val))
 
@@ -855,17 +857,17 @@ class OpenVASResult(_Common):
     @property
     def nvt(self):
         """
-		:return:
-		:rtype: OpenVASNVT
-		"""
+        :return:
+        :rtype: OpenVASNVT
+        """
         return self.__nvt
 
     # ----------------------------------------------------------------------
     @nvt.setter
     def nvt(self, val):
         """
-		:type val: OpenVASNVT
-		"""
+        :type val: OpenVASNVT
+        """
         if not isinstance(val, OpenVASNVT):
             raise TypeError("Expected OpenVASNVT, got %r instead" % type(val))
 
@@ -875,18 +877,18 @@ class OpenVASResult(_Common):
     @property
     def threat(self):
         """
-		:return: "Critical", "High", "Medium", "Low", "None", "Log", "Debug"
-		:rtype: str
-		"""
+        :return: "Critical", "High", "Medium", "Low", "None", "Log", "Debug"
+        :rtype: str
+        """
         return self.__threat
 
     # ----------------------------------------------------------------------
     @threat.setter
     def threat(self, val):
         """
-		:param val: valid values: "Critical", "High", "Medium", "Low", "None", "Log", "Debug"
-		:type val: str
-		"""
+        :param val: valid values: "Critical", "High", "Medium", "Low", "None", "Log", "Debug"
+        :type val: str
+        """
         if isinstance(val, str):
             if val not in self.risk_levels:
                 raise ValueError(
@@ -902,16 +904,16 @@ class OpenVASResult(_Common):
     @property
     def raw_description(self):
         """
-		:rtype: str
-		"""
+        :rtype: str
+        """
         return self.__description
 
     # ----------------------------------------------------------------------
     @raw_description.setter
     def raw_description(self, val):
         """
-		:type val: str
-		"""
+        :type val: str
+        """
         if val is None:
             val = ""
         elif not isinstance(val, str):
@@ -983,16 +985,16 @@ class OpenVASResult(_Common):
     @property
     def notes(self):
         """
-		:rtype: list(OpenVASNotes)
-		"""
+        :rtype: list(OpenVASNotes)
+        """
         return self.__notes
 
     # ----------------------------------------------------------------------
     @notes.setter
     def notes(self, val):
         """
-		:type val: list(OpenVASNotes)
-		"""
+        :type val: list(OpenVASNotes)
+        """
         val = list(val)
         for v in val:
             if not isinstance(v, OpenVASNotes):
@@ -1004,17 +1006,17 @@ class OpenVASResult(_Common):
     @property
     def severity(self):
         """
-		:return: the seveirty
-		:rtype: str
-		"""
+        :return: the seveirty
+        :rtype: str
+        """
         return self.__severity
 
     # ----------------------------------------------------------------------
     @severity.setter
     def severity(self, val):
         """
-		:type val: str
-		"""
+        :type val: str
+        """
         if not isinstance(val, str):
             raise TypeError("Expected string, got %r instead" % type(val))
 
@@ -1022,19 +1024,39 @@ class OpenVASResult(_Common):
 
     # ----------------------------------------------------------------------
     @property
+    def name(self):
+        """
+        :return: the name
+        :rtype: str
+        """
+        return self.__name
+
+    # ----------------------------------------------------------------------
+    @name.setter
+    def name(self, val):
+        """
+        :type val: str
+        """
+        if not isinstance(val, str):
+            raise TypeError("Expected string, got %r instead" % type(val))
+
+        self.__name = val
+
+    # ----------------------------------------------------------------------
+    @property
     def overrides(self):
         """
-		:return:
-		:rtype:
-		"""
+        :return:
+        :rtype:
+        """
         return self.__overrides
 
     # ----------------------------------------------------------------------
     @overrides.setter
     def overrides(self, val):
         """
-		:type val: OpenVASOverride
-		"""
+        :type val: OpenVASOverride
+        """
         if not isinstance(val, OpenVASOverride):
             raise TypeError("Expected OpenVASOverride, got %r instead" % type(val))
 

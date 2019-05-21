@@ -591,7 +591,7 @@ class OMPv7(OMP):
     #
     # ----------------------------------------------------------------------
 
-    def create_target(self, name, hosts, comment="", port_list=""):
+    def create_target(self, name, hosts, comment="", port_list="", alive_test=""):
         """
 		Creates a target in OpenVAS.
 
@@ -606,6 +606,9 @@ class OMPv7(OMP):
 
 		:param port_list: Port List ID to use for the target
 		:type port_list: str
+
+		:param alive_test: Alive Test to check if a target is reachable
+		:type alive_test: str
 
 		:return: the ID of the created target.
 		:rtype: str
@@ -629,6 +632,9 @@ class OMPv7(OMP):
             name,
             m_targets,
         )
+
+        if alive_test:
+            request += """<alive_tests>%s</alive_tests>""" % alive_test
 
         if port_list:
             request += """<port_list id="%s"/>""" % port_list

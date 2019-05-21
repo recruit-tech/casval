@@ -27,7 +27,7 @@ class OpenVASScanner:
         self.user = os.getenv("OPENVAS_USERNAME", "admin")
         self.password = os.getenv("OPENVAS_PASSWORD", "admin")
         self.profile = os.getenv("OPENVAS_PROFILE", "Full and very deep")
-        self.alive_test = os.getenv("OPENVAS_ALIVE_TEST", "TCP-SYN Service Ping")
+        self.alive_test = os.getenv("OPENVAS_ALIVE_TEST", "Consider Alive")
 
         if session != None:
             self.session = session
