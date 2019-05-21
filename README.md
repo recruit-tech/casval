@@ -105,3 +105,11 @@ git remote add rem git@github.com:recruit-tech/casval-rem.git
 git remote add ui git@github.com:recruit-tech/casval-ui.git
 git remote add admin-ui git@github.com:recruit-tech/casval-admin-ui.git
 ```
+
+Update subtree directories with upstream changes.
+
+```
+git subtree pull --prefix rem rem master --squash
+git subtree pull --prefix ui ui master --squash
+git subtree pull --prefix admin-ui admin-ui master --squash
+```
