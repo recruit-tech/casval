@@ -54,6 +54,14 @@
       "change-contact": "担当者情報を変更",
       "restrict-access": "このページへのアクセスを制限",
       "contact-admin": "システム管理者に通知",
+      "multi-host-registration": {
+        "title": "複数の検査対象を登録",
+        "message": "検査対象を改行区切りで入力してください。",
+        "placeholder": "IPアドレスまたはホスト名（改行区切り）",
+        "error-general": "{count}個のホストの登録に失敗しました。エラー内容をご確認ください。",
+        "ok": "登録",
+        "cancel": "キャンセル"
+      },
       "contacts": {
         "title": "担当者情報を登録",
         "message": "担当者の氏名と連絡先を入力してください。",

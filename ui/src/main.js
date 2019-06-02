@@ -4,19 +4,20 @@ import VueI18n from 'vue-i18n';
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+import { library, dom } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import fontawesome from '@fortawesome/fontawesome';
-import faArrowLeft from '@fortawesome/fontawesome-free-solid/faArrowLeft';
-import faBars from '@fortawesome/fontawesome-free-solid/faBars';
-import faCalendar from '@fortawesome/fontawesome-free-solid/faCalendar';
-import faCalendarTimes from '@fortawesome/fontawesome-free-solid/faCalendarTimes';
-import faCheckCircle from '@fortawesome/fontawesome-free-solid/faCheckCircle';
-import faChevronCircleRight from '@fortawesome/fontawesome-free-solid/faChevronCircleRight';
-import faClock from '@fortawesome/fontawesome-free-solid/faClock';
-import faDownload from '@fortawesome/fontawesome-free-solid/faDownload';
-import faExclamationCircle from '@fortawesome/fontawesome-free-solid/faExclamationCircle';
-import faPencilAlt from '@fortawesome/fontawesome-free-solid/faPencilAlt';
-import faSpinner from '@fortawesome/fontawesome-free-solid/faSpinner';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons/faArrowLeft';
+import { faBars } from '@fortawesome/free-solid-svg-icons/faBars';
+import { faCalendar } from '@fortawesome/free-solid-svg-icons/faCalendar';
+import { faCalendarTimes } from '@fortawesome/free-solid-svg-icons/faCalendarTimes';
+import { faCheckCircle } from '@fortawesome/free-solid-svg-icons/faCheckCircle';
+import { faChevronCircleRight } from '@fortawesome/free-solid-svg-icons/faChevronCircleRight';
+import { faClock } from '@fortawesome/free-solid-svg-icons/faClock';
+import { faDownload } from '@fortawesome/free-solid-svg-icons/faDownload';
+import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons/faExclamationCircle';
+import { faPencilAlt } from '@fortawesome/free-solid-svg-icons/faPencilAlt';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons/faSpinner';
+import { faFileUpload } from '@fortawesome/free-solid-svg-icons/faFileUpload';
 
 import App from './App.vue';
 
@@ -36,7 +37,7 @@ const i18n = new VueI18n({
 Vue.config.productionTip = false;
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);
-fontawesome.library.add(
+library.add(
   faArrowLeft,
   faBars,
   faCalendar,
@@ -47,8 +48,11 @@ fontawesome.library.add(
   faDownload,
   faExclamationCircle,
   faPencilAlt,
-  faSpinner
+  faSpinner,
+  faFileUpload
 );
+
+dom.watch();
 
 window.eventBus = new Vue();
 

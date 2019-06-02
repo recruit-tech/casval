@@ -177,7 +177,8 @@ export default {
         if (state === 'unsafe') {
           status = 'fatal';
           return true;
-        } else if (state !== 'completed') {
+        }
+        if (state !== 'completed') {
           status = 'ongoing';
           return true;
         }
