@@ -54,6 +54,14 @@
       "change-contact": "Update contact detail",
       "restrict-access": "Restrict access to this page",
       "contact-admin": "Contact system administrators",
+      "multi-host-registration": {
+        "title": "Register multiple scan targets",
+        "message": "Enter IP addresses or host names delimited by newline",
+        "placeholder": "IP addresses or host names (delimited by newline)",
+        "error-general": "Failed to add {count} host(s). Please check the error reason below.",
+        "ok": "Register",
+        "cancel": "Cancel"
+      },
       "contacts": {
         "title": "Change contacts",
         "message": "Enter names and e-mail addresses of contacts.",
