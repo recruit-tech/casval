@@ -52,12 +52,23 @@
     "previous": "前へ",
     "next": "次へ",
     "fix-required": "修正要否",
+    "correction-method": "修正方法",
+    "describe": "記入",
     "choose-fix-required": "修正要否を選択...",
     "fix-required-required": "必須",
     "fix-required-recommended": "推奨",
     "fix-required-optional": "任意（不要）",
     "fix-required-undefined": "未定義",
     "error-loading": "脆弱性の読み込みに失敗しました",
-    "error-update": "ステータスの更新に失敗しました"
+    "error-update": "ステータスの更新に失敗しました",
+    "modal": {
+      "advice": {
+        "title": "修正方法を登録",
+        "message": "脆弱性の修正方法を記入してください。",
+        "placeholder": "修正方法",
+        "ok": "登録",
+        "cancel": "キャンセル"
+      }
+    }
   }
 }
