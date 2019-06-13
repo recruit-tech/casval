@@ -5,11 +5,7 @@ jobs:
       - image: circleci/node:10.16.0-stretch
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - npm-cache-{{ checksum "./ui/package-lock.json" }}
-          paths:
-            - /caches/ui
+      - run: mkdir -p tmp/ui
       - run:
           name: Instsall dependency package
           command: |
@@ -20,25 +16,19 @@ jobs:
           command: |
             cd ui
             npm run build
-      - save_cache:
-          key: npm-cache-{{ checksum "./ui/package-lock.json" }}
-          paths:
-            - ./ui/dist
+            mv dist/ /home/circleci/project/tmp/ui/dist
       - persist_to_workspace:
-          root: ./ui
+          root: /home/circleci/project/tmp/
           paths:
-            - dist/
+            - ui/
+
 
   build-casval-admin-ui:
     docker:
       - image: circleci/node:10.16.0-stretch
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - npm-cache-{{ checksum "./admin-ui/package-lock.json" }}
-          paths:
-            - /caches/admin-ui
+      - run: mkdir -p tmp/admin-ui
       - run:
           name: Instsall dependency package
           command: |
@@ -49,21 +39,36 @@ jobs:
           command: |
             cd admin-ui
             npm run build
-      - save_cache:
-          key: npm-cache-{{ checksum "./admin-ui/package-lock.json" }}
-          paths:
-            - ./admin-ui/dist
+            mv dist/ /home/circleci/project/tmp/admin-ui/dist
       - persist_to_workspace:
-          root: ./admin-ui
+          root: /home/circleci/project/tmp/
           paths:
-            - dist/
-#   deploy:
-#     docker:
-#       - image: google/cloud-sdk
-#     steps:
-#       - checkout
-#       - attach_workspace:
-#           at: /caches
+            - admin-ui/
+  deploy:
+    docker:
+      - image: google/cloud-sdk
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ./tmp
+      - run:
+          name: Auth Google API
+          command: |
+            echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
+            gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+            gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
+      - run:
+          name: Deploy casval-ui
+          command: |
+            cp -R ./tmp/ui/dist/ ./ui/dist/
+            cd ./ui/
+            gcloud -q app deploy
+      - run:
+          name: Deploy casval-admin-ui
+          command: |
+            cp -R ./tmp/admin-ui/dist/ ./admin-ui/dist/
+            cd ./admin-ui/
+            gcloud -q app deploy
 
 workflows:
   version: 2
@@ -71,3 +76,7 @@ workflows:
     jobs:
       - build-casval-ui
       - build-casval-admin-ui
+      - deploy:
+          requires:
+            - build-casval-ui
+            - build-casval-admin-ui
