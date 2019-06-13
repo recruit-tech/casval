@@ -1,6 +1,6 @@
 <template>
   <div class="pb-5">
-    <table class="table table-hover mb-0">
+    <table class="table table-sm table-hover mb-0">
       <thead>
         <tr>
           <th scope="col">{{ $t('audit.name') }}</th>
@@ -16,9 +16,9 @@
             <a :href="`${origin}/#/${audit.uuid.substr(0, 24)}/`" target="_blank">{{ audit.name }}</a>
           </td>
           <td>
-            <a :href="generateMailURL(audit)"
-              ><span v-for="(contact, index) in audit.contacts" :key="index">{{ contact.name }}<br /></span
-            ></a>
+            <a :href="generateMailURL(audit)">
+              <span v-for="(contact, index) in audit.contacts" :key="index">{{ contact.name }}<br /></span>
+            </a>
           </td>
           <td>{{ displayDateTime(audit.created_at) }}</td>
           <td>{{ displayDateTime(audit.updated_at) }}</td>
