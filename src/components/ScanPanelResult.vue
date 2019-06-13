@@ -6,7 +6,7 @@
       </small>
       <small class="text-dark" v-for="result in scan.results" :key="result.id">
         <span v-if="result.fix_required === 'REQUIRED'">
-          <a :href="scan['report_url']">
+          <a v-tooltip="{ content: result.advice }">
             <font-awesome-icon icon="exclamation-circle" class="mr-2"></font-awesome-icon>{{ result.name }} -
             {{ result.port }}
           </a>
@@ -82,3 +82,43 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+.tooltip {
+  &[aria-hidden='true'] {
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.15s, visibility 0.15s;
+  }
+
+  .tooltip-inner {
+    max-width: 60rem;
+    text-align: left;
+  }
+
+  &[aria-hidden='false'] {
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 0.15s;
+  }
+
+  &.popover {
+    $color: #f9f9f9;
+
+    .popover-inner {
+      background: $color;
+      color: red;
+      padding: 24px;
+      border-radius: 5px;
+      box-shadow: 0 5px 30px rgba(black, 0.1);
+    }
+
+    .popover-arrow {
+      border-color: $color;
+    }
+  }
+
+  display: block !important;
+  z-index: 2000;
+}
+</style>
