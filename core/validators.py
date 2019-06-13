@@ -152,4 +152,7 @@ class VulnListInputSchema(PagenationInputSchema):
 
 
 class VulnUpdateSchema(marshmallow.Schema):
-    fix_required = marshmallow.String(required=True, validate=[validate.OneOf(VULN_FIX_REQUIRED_STATUS)])
+    fix_required = marshmallow.String(required=False, validate=[validate.OneOf(VULN_FIX_REQUIRED_STATUS)])
+    advice = marshmallow.String(
+        required=False, validate=[validate.Length(min=0, max=SCAN_MAX_COMMENT_LENGTH)]
+    )

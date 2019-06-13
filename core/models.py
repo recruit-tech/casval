@@ -81,6 +81,9 @@ class VulnTable(db.Model):
 
     oid = CharField(unique=True, max_length=191, null=True, default=None)
     fix_required = CharField(default="UNDEFINED")
+    advice = TextField(default="")
+    created_at = DateTimeField(constraints=[SQL("DEFAULT CURRENT_TIMESTAMP")])
+    updated_at = DateTimeField(constraints=[SQL("DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")])
 
 
 class ResultTable(db.Model):
@@ -99,3 +102,5 @@ class ResultTable(db.Model):
     severity = CharField(null=True)
     severity_rank = CharField(null=True)
     scanner = CharField(null=True)
+    created_at = DateTimeField(constraints=[SQL("DEFAULT CURRENT_TIMESTAMP")])
+    updated_at = DateTimeField(constraints=[SQL("DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")])

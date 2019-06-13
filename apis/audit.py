@@ -365,6 +365,7 @@ class AuditDownload(AuditResource):
         "oid",
         "created_at",
         "comment",
+        "advice",
     ]
 
     @Authorizer.token_required
