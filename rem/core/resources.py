@@ -77,7 +77,7 @@ class ScanResource(Resource):
             scan["results"] = []
 
             results = (
-                ResultTable.select(ResultTable, VulnTable.fix_required)
+                ResultTable.select(ResultTable, VulnTable.fix_required, VulnTable.advice)
                 .join(VulnTable, on=(ResultTable.oid == VulnTable.oid))
                 .where(ResultTable.scan_id == scan["id"])
             )

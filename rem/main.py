@@ -62,3 +62,9 @@ CORS(app, origins=app.config["PERMITTED_ORIGINS"])
 
 with db.database:
     db.database.create_tables([AuditTable, ContactTable, ScanTable, TaskTable, VulnTable, ResultTable])
+
+
+@app.after_request
+def add_header(response):
+    response.headers["Cache-Control"] = "private, no-store, no-cache, must-revalidate"
+    return response
