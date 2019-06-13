@@ -1,0 +1,73 @@
+version: 2
+jobs:
+  build-casval-ui:
+    docker:
+      - image: circleci/node:10.16.0-stretch
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - npm-cache-{{ checksum "./ui/package-lock.json" }}
+          paths:
+            - /caches/ui
+      - run:
+          name: Instsall dependency package
+          command: |
+            cd ui
+            npm ci
+      - run:
+          name: Build casval-ui
+          command: |
+            cd ui
+            npm run build
+      - save_cache:
+          key: npm-cache-{{ checksum "./ui/package-lock.json" }}
+          paths:
+            - ./ui/dist
+      - persist_to_workspace:
+          root: ./ui
+          paths:
+            - dist/
+
+  build-casval-admin-ui:
+    docker:
+      - image: circleci/node:10.16.0-stretch
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - npm-cache-{{ checksum "./admin-ui/package-lock.json" }}
+          paths:
+            - /caches/admin-ui
+      - run:
+          name: Instsall dependency package
+          command: |
+            cd admin-ui
+            npm ci
+      - run:
+          name: Build casval-ui
+          command: |
+            cd admin-ui
+            npm run build
+      - save_cache:
+          key: npm-cache-{{ checksum "./admin-ui/package-lock.json" }}
+          paths:
+            - ./admin-ui/dist
+      - persist_to_workspace:
+          root: ./admin-ui
+          paths:
+            - dist/
+#   deploy:
+#     docker:
+#       - image: google/cloud-sdk
+#     steps:
+#       - checkout
+#       - attach_workspace:
+#           at: /caches
+
+workflows:
+  version: 2
+  test-and-build:
+    jobs:
+      - build-casval-ui
+      - build-casval-admin-ui
