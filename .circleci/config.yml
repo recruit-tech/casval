@@ -58,6 +58,22 @@ jobs:
             gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
             gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
       - run:
+          name: Add Sops
+          command: |
+            curl -LO https://github.com/mozilla/sops/releases/download/3.3.1/sops-3.3.1.linux
+            chmod +x sops-3.3.1.linux
+            mv sops-3.3.1.linux ./rem/sops
+      - run:
+          name: Deploy casval-rem
+          command: |
+            # Need secret file for application default credential
+            echo $GCLOUD_SERVICE_KEY > secret.json
+            export GOOGLE_APPLICATION_CREDENTIALS=$PWD/secret.json
+
+            cd ./rem/
+            ./sops --decrypt config.enc.env > config.env
+            gcloud -q app deploy
+      - run:
           name: Deploy casval-ui
           command: |
             cp -R ./tmp/ui/dist/ ./ui/dist/
@@ -69,6 +85,14 @@ jobs:
             cp -R ./tmp/admin-ui/dist/ ./admin-ui/dist/
             cd ./admin-ui/
             gcloud -q app deploy
+      - run:
+          name: Deploy Dispatch
+          command: |
+            gcloud -q app deploy dispatch.yaml
+      - run:
+          name: Deploy CronJobs
+          command: |
+            gcloud -q app deploy cron.yaml
 
 workflows:
   version: 2
