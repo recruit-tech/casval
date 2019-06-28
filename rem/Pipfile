@@ -18,6 +18,7 @@ validators = "*"
 pytz = "*"
 requests = "*"
 google-cloud-storage = "*"
+kubernetes = "*"
 
 [dev-packages]
 isort = "*"

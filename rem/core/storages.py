@@ -41,7 +41,7 @@ class CloudFileStorage:
 
     def __init__(self):
         self.client = storage.Client(project=os.environ["GCP_PROJECT_NAME"])
-        self.bucket = client.get_bucket(os.environ["GCP_REPORT_STORAGE_NAME"])
+        self.bucket = self.client.get_bucket(os.environ["GCP_REPORT_STORAGE_NAME"])
 
     def load(self, key):
         try:

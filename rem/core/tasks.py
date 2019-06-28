@@ -26,7 +26,7 @@ else:
     # for development environment
     from .storages import LocalFileStorage as Storage
 
-SCAN_MAX_PARALLEL_SESSION = 1
+SCAN_MAX_PARALLEL_SESSION = os.getenv("SCAN_MAX_PARALLEL_SESSION", 1)
 SCAN_REPORT_KEY_NAME = "{audit_id:08}-{scan_id:08}-{task_uuid:.8}.xml"
 
 
@@ -119,7 +119,20 @@ class PendingTask(BaseTask):
             self._update(task, next_progress=TaskProgress.DELETED.name)
             return True
 
-        session = Scanner().launch_scan(task["target"])
+        scanner = None
+        if task.get("session") == "":
+            scanner = Scanner()
+        else:
+            scanner = Scanner(json.loads(task["session"]))
+
+        session = scanner.create()
+        task["session"] = json.dumps(session)
+
+        if session["status"] != "CREATED":
+            self._update(task, next_progress=TaskProgress.PENDING.name)
+            return True
+
+        session = Scanner(json.loads(task["session"])).launch_scan(task["target"])
         task["session"] = json.dumps(session)
         app.logger.info("[Pending task] Launched successfully, task={task}".format(task=task))
         self._update(task, next_progress=TaskProgress.RUNNING.name)
@@ -179,6 +192,9 @@ class StoppedTask(BaseTask):
             storage.store(key, report)
 
         report = Scanner.parse_report(report)
+
+        scanner = Scanner(json.loads(task["session"]))
+        scanner.delete()
 
         with db.database.atomic():
 
