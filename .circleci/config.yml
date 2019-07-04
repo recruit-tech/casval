@@ -8,20 +8,18 @@ jobs:
       - run: mkdir -p tmp/ui
       - run:
           name: Instsall dependency package
-          command: |
-            cd ui
-            npm ci
+          working_directory: ui/
+          command: npm ci
       - run:
           name: Build casval-ui
+          working_directory: ui/
           command: |
-            cd ui
             npm run build
-            mv dist/ /home/circleci/project/tmp/ui/dist
+            mv dist/ ~/project/tmp/ui/dist
       - persist_to_workspace:
-          root: /home/circleci/project/tmp/
+          root: ~/project/tmp/
           paths:
             - ui/
-
 
   build-casval-admin-ui:
     docker:
@@ -31,17 +29,16 @@ jobs:
       - run: mkdir -p tmp/admin-ui
       - run:
           name: Instsall dependency package
-          command: |
-            cd admin-ui
-            npm ci
+          working_directory: admin-ui/
+          command: npm ci
       - run:
           name: Build casval-ui
+          working_directory: admin-ui/
           command: |
-            cd admin-ui
             npm run build
-            mv dist/ /home/circleci/project/tmp/admin-ui/dist
+            mv dist/ ~/project/tmp/admin-ui/dist
       - persist_to_workspace:
-          root: /home/circleci/project/tmp/
+          root: ~/project/tmp/
           paths:
             - admin-ui/
   deploy:
@@ -65,25 +62,25 @@ jobs:
             mv sops-3.3.1.linux ./rem/sops
       - run:
           name: Deploy casval-rem
+          working_directory: rem/
           command: |
             # Need secret file for application default credential
             echo $GCLOUD_SERVICE_KEY > secret.json
             export GOOGLE_APPLICATION_CREDENTIALS=$PWD/secret.json
 
-            cd ./rem/
             ./sops --decrypt config.enc.env > config.env
             gcloud -q app deploy
       - run:
           name: Deploy casval-ui
+          working_directory: ui/
           command: |
-            cp -R ./tmp/ui/dist/ ./ui/dist/
-            cd ./ui/
+            cp -R ~/project/tmp/ui/dist/ ~/project/ui/dist/
             gcloud -q app deploy
       - run:
           name: Deploy casval-admin-ui
+          working_directory: admin-ui/
           command: |
-            cp -R ./tmp/admin-ui/dist/ ./admin-ui/dist/
-            cd ./admin-ui/
+            cp -R ~/project/tmp/admin-ui/dist/ ~/project/admin-ui/dist/
             gcloud -q app deploy
       - run:
           name: Deploy Dispatch
