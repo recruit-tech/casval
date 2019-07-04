@@ -20,6 +20,7 @@
         "failure": "検査に失敗しました。再予約してください",
         "completed": "検査が完了しました",
         "unsafe": "深刻な脆弱性が検出されました。対策を検討してください",
+        "severity-unrated": "検査結果をレビューしています",
         "loading": "検査情報を読み込み中です..."
       },
       "date": "YYYY年MM月DD日 (ddd)",
@@ -38,6 +39,7 @@
       "back": "戻る",
       "error-deletion": "スケジュールの削除に失敗しました",
       "result": {
+        "severity-unrated": "深刻度の評価が完了するまでお待ち下さい。",
         "no-critical-issues": "深刻な脆弱性は見つかりませんでした。",
         "download": "検査結果をダウンロード",
         "ignore": "修正不要と判断",

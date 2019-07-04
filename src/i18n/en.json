@@ -16,10 +16,11 @@
     "scan": {
       "status": {
         "unscheduled": "Schedule a scan session for the target.",
-        "scheduled": "Please, wait until scheduled scan completed.",
+        "scheduled": "Please wait until scheduled scan completed.",
         "failure": "Failed to scan the target, you need to schedule a new scan session for the target.",
         "completed": "Scan session is complete successfully.",
         "unsafe": "Critical vulnerabilities has been detected. Please make countermeasures.",
+        "severity-unrated": "Please wait until the scan result is confirmed.",
         "loading": "Loading scan information..."
       },
       "date": "DD/MM/YYYY (ddd)",
@@ -38,6 +39,7 @@
       "back": "Back",
       "error-deletion": "Failed to delete the scan session",
       "result": {
+        "severity-unrated": "Now rating severity of newly found vulnerabilities",
         "no-critical-issues": "No critical issues",
         "download": "Download scan result",
         "ignore": "Decide not to implement correction",

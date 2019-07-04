@@ -33,6 +33,11 @@ export default {
       required: true
     }
   },
+  data() {
+    return {
+      updateTimer: null
+    };
+  },
   methods: {
     deleteScanSchedule: async function deleteScanSchedule() {
       try {
@@ -61,6 +66,14 @@ export default {
       end = end.format(this.$i18n.t('home.scan.datetime'));
       return this.$i18n.t('home.scan.scheduled', { start, end });
     }
+  },
+  mounted() {
+    this.updateTimer = window.setInterval(() => {
+      window.eventBus.$emit('SCAN_UPDATED', this.scan.uuid);
+    }, 60 * 1000);
+  },
+  beforeDestroy() {
+    window.clearInterval(this.updateTimer);
   }
 };
 </script>
