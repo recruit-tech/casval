@@ -24,6 +24,9 @@
             <b class="card-text text-danger" v-else-if="scan.calculatedState === 'failure'">
               <font-awesome-icon icon="exclamation-circle"></font-awesome-icon> {{ $t('home.scan.status.failure') }}
             </b>
+            <b class="card-text text-dark" v-else-if="scan.calculatedState === 'severity-unrated'">
+              {{ $t('home.scan.status.severity-unrated') }}
+            </b>
             <b class="card-text text-dark" v-else-if="scan.calculatedState === 'completed'">
               {{ $t('home.scan.status.completed') }}
             </b>
@@ -52,7 +55,11 @@
             >
             </scan-panel-scheduler>
             <scan-panel-result
-              v-else-if="scan.calculatedState === 'completed' || scan.calculatedState === 'unsafe'"
+              v-else-if="
+                scan.calculatedState === 'completed' ||
+                  scan.calculatedState === 'unsafe' ||
+                  scan.calculatedState === 'severity-unrated'
+              "
               :scan="scan"
               :scan-api-client="scanApiClient"
             >

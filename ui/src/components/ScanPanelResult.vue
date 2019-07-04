@@ -1,7 +1,11 @@
 <template>
   <div>
     <div>
-      <small class="text-dark" v-if="!isFixRequired">
+      <small class="text-dark" v-if="isSeverityUnrated">
+        <font-awesome-icon icon="clock" class="mr-1"></font-awesome-icon>
+        {{ $t('home.scan.result.severity-unrated') }}
+      </small>
+      <small class="text-dark" v-if="!isSeverityUnrated && !isFixRequired">
         {{ $t('home.scan.result.no-critical-issues') }}
       </small>
       <small class="text-dark" v-for="result in scan.results" :key="result.id">
@@ -64,6 +68,11 @@ export default {
       required: true
     }
   },
+  data() {
+    return {
+      updateTimer: null
+    };
+  },
   components: {
     ScanPanelScheduler
   },
@@ -78,6 +87,21 @@ export default {
   computed: {
     isFixRequired: function isFixRequired() {
       return this.scan.results.some(result => result.fix_required === 'REQUIRED');
+    },
+    isSeverityUnrated: function isSeverityUnrated() {
+      return this.scan.results.some(result => result.fix_required === 'UNDEFINED');
+    }
+  },
+  mounted() {
+    if (this.isSeverityUnrated) {
+      this.updateTimer = window.setInterval(() => {
+        window.eventBus.$emit('SCAN_UPDATED', this.scan.uuid);
+      }, 60 * 1000);
+    }
+  },
+  beforeDestroy() {
+    if (this.updateTimer !== null) {
+      window.clearInterval(this.updateTimer);
     }
   }
 };
