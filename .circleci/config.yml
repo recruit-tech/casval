@@ -49,23 +49,29 @@ jobs:
       - attach_workspace:
           at: ./tmp
       - run:
-          name: Deploy casval-ui
+          name: Auth Google API
+          command: |
+            echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
+            gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+            gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
+      - run:
+          name: Deploying the casval-ui files
           working_directory: ui/
           command: |
             cp -R ~/project/tmp/ui/dist/ ~/project/ui/dist/
             gcloud -q app deploy
       - run:
-          name: Deploy casval-admin-ui
+          name: Deploying the casval-admin-ui files
           working_directory: admin-ui/
           command: |
             cp -R ~/project/tmp/admin-ui/dist/ ~/project/admin-ui/dist/
             gcloud -q app deploy
       - run:
-          name: Deploy Dispatch
+          name: Deploying the dispatch file
           command: |
             gcloud -q app deploy dispatch.yaml
       - run:
-          name: Deploy CronJobs
+          name: Deploying the cron jobs
           command: |
             gcloud -q app deploy cron.yaml
 
@@ -79,7 +85,3 @@ workflows:
           requires:
             - build-casval-ui
             - build-casval-admin-ui
-          filters:
-            branches:
-              only:
-                - master
