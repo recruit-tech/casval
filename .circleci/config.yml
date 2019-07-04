@@ -85,3 +85,7 @@ workflows:
           requires:
             - build-casval-ui
             - build-casval-admin-ui
+          filters:
+            branches:
+              only:
+                - master
