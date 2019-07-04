@@ -52,12 +52,23 @@
     "previous": "Previous",
     "next": "Next",
     "fix-required": "Fix Required",
+    "correction-method": "Correction Method",
+    "describe": "Describe",
     "choose-fix-required": "Choose Required Level...",
     "fix-required-required": "Required",
     "fix-required-recommended": "Recommended",
     "fix-required-optional": "Optional (Not Required)",
     "fix-required-undefined": "Undefined",
     "error-loading": "Failed to load vulnerabilities",
-    "error-update": "Failed to update the vulnerability status"
+    "error-update": "Failed to update the vulnerability status",
+    "modal": {
+      "advice": {
+        "title": "Register correction method",
+        "message": "Enter correction method of the vulnerability.",
+        "placeholder": "Correction method",
+        "ok": "Register",
+        "cancel": "Cancel"
+      }
+    }
   }
 }

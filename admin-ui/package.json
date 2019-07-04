@@ -8,7 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.19.0",
     "bootstrap": "^4.3.1",
     "jquery": "^3.4.1",
     "lodash": "^4.17.11",
@@ -19,12 +19,12 @@
     "vue-i18n": "^8.11.2"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.7.0",
-    "@vue/cli-plugin-eslint": "^3.7.0",
-    "@vue/cli-service": "^3.7.0",
+    "@vue/cli-plugin-babel": "^3.8.0",
+    "@vue/cli-plugin-eslint": "^3.8.0",
+    "@vue/cli-service": "^3.8.0",
     "@vue/eslint-config-airbnb": "^4.0.0",
     "node-sass": "^4.12.0",
-    "prettier": "^1.17.0",
+    "prettier": "^1.17.1",
     "prettier-webpack-plugin": "^1.2.0",
     "sass-loader": "^7.1.0",
     "vue-template-compiler": "^2.6.10"
@@ -45,7 +45,18 @@
       "comma-dangle": 0,
       "arrow-parens": 0,
       "function-paren-newline": 0,
-      "import/no-extraneous-dependencies": 0
+      "import/no-extraneous-dependencies": 0,
+      "vue/attribute-hyphenation": [
+        "error",
+        "always"
+      ],
+      "vue/html-indent": [
+        "error",
+        2
+      ],
+      "vue/html-end-tags": "error",
+      "vue/require-default-prop": "error",
+      "vue/require-prop-types": "error"
     },
     "parserOptions": {
       "parser": "babel-eslint"

@@ -28,6 +28,7 @@ ScanResultModel = api.model(
         "severity_rank": fields.String(required=True),
         "scanner": fields.String(required=True),
         "fix_required": fields.String(required=True),
+        "advice": fields.String(required=True),
     },
 )
 

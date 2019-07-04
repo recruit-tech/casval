@@ -23,6 +23,7 @@ VulnOutputModel = api.model(
         "cvss_base": fields.String(required=True),
         "cve": fields.String(required=True),
         "description": fields.String(required=True),
+        "advice": fields.String(required=True),
     },
 )
 
@@ -53,6 +54,7 @@ class VulneravilityList(Resource):
         vuln_query = VulnTable.select(
             VulnTable.oid,
             VulnTable.fix_required,
+            VulnTable.advice,
             ResultTable.name,
             ResultTable.cvss_base,
             ResultTable.cve,
@@ -70,6 +72,7 @@ class VulneravilityList(Resource):
         vuln_query = vuln_query.group_by(
             VulnTable.oid,
             VulnTable.fix_required,
+            VulnTable.advice,
             ResultTable.name,
             ResultTable.cvss_base,
             ResultTable.cve,
@@ -93,7 +96,10 @@ class VulneravilityList(Resource):
 @api.response(404, "Not Found")
 class Vulnerability(Resource):
 
-    VulnPatchInputModel = api.model("VulnPatchInput", {"fix_required": fields.String(required=True)})
+    VulnPatchInputModel = api.model(
+        "VulnPatchInput",
+        {"fix_required": fields.String(required=False), "advice": fields.String(required=False)},
+    )
 
     @api.expect(VulnPatchInputModel, validate=True)
     @Authorizer.admin_token_required

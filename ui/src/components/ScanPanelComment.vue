@@ -2,7 +2,7 @@
   <div>
     <div class="d-flex align-items-start flex-row">
       <div class="py-1">
-        <small class="text-secondary">
+        <small class="text-dark">
           {{ $t('home.scan.result.fill-reason', { reminingLength: reminingStringLength }) }}<br />
           <span class="text-danger">{{ errorMessage }}</span>
         </small>

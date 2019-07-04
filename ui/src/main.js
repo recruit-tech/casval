@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import VueI18n from 'vue-i18n';
+import VTooltip from 'v-tooltip';
 
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -33,6 +34,12 @@ const i18n = new VueI18n({
     ja
   }
 });
+
+const tooltipOptions = {
+  defaultHtml: false
+};
+
+Vue.use(VTooltip, tooltipOptions);
 
 Vue.config.productionTip = false;
 
