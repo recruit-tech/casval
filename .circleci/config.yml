@@ -1,0 +1,91 @@
+version: 2
+jobs:
+  build-casval-ui:
+    docker:
+      - image: circleci/node:10.16.0-stretch
+    steps:
+      - checkout
+      - run: mkdir -p tmp/ui
+      - run:
+          name: Instsall dependency package
+          working_directory: ui/
+          command: npm ci
+      - run:
+          name: Build casval-ui
+          working_directory: ui/
+          command: |
+            npm run build
+            mv dist/ ~/project/tmp/ui/dist
+      - persist_to_workspace:
+          root: ~/project/tmp/
+          paths:
+            - ui/
+
+  build-casval-admin-ui:
+    docker:
+      - image: circleci/node:10.16.0-stretch
+    steps:
+      - checkout
+      - run: mkdir -p tmp/admin-ui
+      - run:
+          name: Instsall dependency package
+          working_directory: admin-ui/
+          command: npm ci
+      - run:
+          name: Build casval-ui
+          working_directory: admin-ui/
+          command: |
+            npm run build
+            mv dist/ ~/project/tmp/admin-ui/dist
+      - persist_to_workspace:
+          root: ~/project/tmp/
+          paths:
+            - admin-ui/
+  deploy:
+    docker:
+      - image: google/cloud-sdk
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ./tmp
+      - run:
+          name: Auth Google API
+          command: |
+            echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
+            gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+            gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
+      - run:
+          name: Deploying the casval-ui files
+          working_directory: ui/
+          command: |
+            cp -R ~/project/tmp/ui/dist/ ~/project/ui/dist/
+            gcloud -q app deploy
+      - run:
+          name: Deploying the casval-admin-ui files
+          working_directory: admin-ui/
+          command: |
+            cp -R ~/project/tmp/admin-ui/dist/ ~/project/admin-ui/dist/
+            gcloud -q app deploy
+      - run:
+          name: Deploying the dispatch file
+          command: |
+            gcloud -q app deploy dispatch.yaml
+      - run:
+          name: Deploying the cron jobs
+          command: |
+            gcloud -q app deploy cron.yaml
+
+workflows:
+  version: 2
+  test-and-build:
+    jobs:
+      - build-casval-ui
+      - build-casval-admin-ui
+      - deploy:
+          requires:
+            - build-casval-ui
+            - build-casval-admin-ui
+          filters:
+            branches:
+              only:
+                - master
