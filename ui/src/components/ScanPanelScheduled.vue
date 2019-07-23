@@ -3,7 +3,8 @@
     <div class="pb-1">
       <small class="text-dark">
         {{ schedule }}<br />
-        {{ $t('home.scan.source-ip-notification', { sourceIp: scan.source_ip }) }}
+        {{ $t('home.scan.source-ip-notification', { sourceIp: scan.source_ip }) }}<br />
+        {{ scanStartedAt }}
       </small>
     </div>
     <div class="pt-3">
@@ -33,6 +34,11 @@ export default {
       required: true
     }
   },
+  data() {
+    return {
+      updateTimer: null
+    };
+  },
   methods: {
     deleteScanSchedule: async function deleteScanSchedule() {
       try {
@@ -49,18 +55,37 @@ export default {
       } catch (e) {
         this.errorMessage = this.$i18n.t('home.scan.error-deletion');
       }
+    },
+    getUtcTime: function getUtcTime(time) {
+      moment.locale(this.$i18n.locale);
+      const utcOffset = moment().utcOffset();
+      return moment(time, 'YYYY-MM-DDThh:mm:ss').add(utcOffset, 'minutes');
     }
   },
   computed: {
     schedule: function getSchedule() {
-      moment.locale(this.$i18n.locale);
-      const utcOffset = moment().utcOffset();
-      let start = moment(this.scan.start_at, 'YYYY-MM-DD hh:mm:ss').add(utcOffset, 'minutes');
+      let start = this.getUtcTime(this.scan.start_at);
       start = start.format(this.$i18n.t('home.scan.datetime'));
-      let end = moment(this.scan.end_at, 'YYYY-MM-DD hh:mm:ss').add(utcOffset, 'minutes');
+      let end = this.getUtcTime(this.scan.end_at);
       end = end.format(this.$i18n.t('home.scan.datetime'));
       return this.$i18n.t('home.scan.scheduled', { start, end });
+    },
+    scanStartedAt: function getScanStartedAt() {
+      let startedAt = this.getUtcTime(this.scan.started_at);
+      if (startedAt.year() < 2000) {
+        return '';
+      }
+      startedAt = startedAt.format(this.$i18n.t('home.scan.scantime'));
+      return this.$i18n.t('home.scan.scan-started', { startedAt });
     }
+  },
+  mounted() {
+    this.updateTimer = window.setInterval(() => {
+      window.eventBus.$emit('SCAN_UPDATED', this.scan.uuid);
+    }, 60 * 1000);
+  },
+  beforeDestroy() {
+    window.clearInterval(this.updateTimer);
   }
 };
 </script>
