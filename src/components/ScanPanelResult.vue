@@ -1,7 +1,12 @@
 <template>
   <div>
     <div>
-      <small class="text-dark" v-if="!isFixRequired">
+      <small class="text-dark"> {{ scanEndedAt }}<br /> </small>
+      <small class="text-dark" v-if="isSeverityUnrated">
+        <font-awesome-icon icon="clock" class="mr-1"></font-awesome-icon>
+        {{ $t('home.scan.result.severity-unrated') }}
+      </small>
+      <small class="text-dark" v-if="!isSeverityUnrated && !isFixRequired">
         {{ $t('home.scan.result.no-critical-issues') }}
       </small>
       <small class="text-dark" v-for="result in scan.results" :key="result.id">
@@ -50,6 +55,7 @@
 </template>
 
 <script>
+import moment from 'moment';
 import ScanPanelScheduler from './ScanPanelScheduler.vue';
 
 export default {
@@ -64,6 +70,11 @@ export default {
       required: true
     }
   },
+  data() {
+    return {
+      updateTimer: null
+    };
+  },
   components: {
     ScanPanelScheduler
   },
@@ -73,11 +84,39 @@ export default {
     },
     setReschedule: function setReschedule() {
       this.$parent.requireReschedule = true;
+    },
+    getUtcTime: function getUtcTime(time) {
+      moment.locale(this.$i18n.locale);
+      const utcOffset = moment().utcOffset();
+      return moment(time, 'YYYY-MM-DD hh:mm:ss').add(utcOffset, 'minutes');
     }
   },
   computed: {
     isFixRequired: function isFixRequired() {
       return this.scan.results.some(result => result.fix_required === 'REQUIRED');
+    },
+    isSeverityUnrated: function isSeverityUnrated() {
+      return this.scan.results.some(result => result.fix_required === 'UNDEFINED');
+    },
+    scanEndedAt: function scanEndedAt() {
+      let endedAt = this.getUtcTime(this.scan.ended_at);
+      if (endedAt.year() < 2000) {
+        return '';
+      }
+      endedAt = endedAt.format(this.$i18n.t('home.scan.scantime'));
+      return this.$i18n.t('home.scan.scan-ended', { endedAt });
+    }
+  },
+  mounted() {
+    if (this.isSeverityUnrated) {
+      this.updateTimer = window.setInterval(() => {
+        window.eventBus.$emit('SCAN_UPDATED', this.scan.uuid);
+      }, 60 * 1000);
+    }
+  },
+  beforeDestroy() {
+    if (this.updateTimer !== null) {
+      window.clearInterval(this.updateTimer);
     }
   }
 };
