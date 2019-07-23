@@ -13,6 +13,7 @@
     "completed": "検査完了",
     "approved": "完了承認済み",
     "name": "案件名",
+    "description": "案件の説明",
     "contact": "担当者",
     "contact-name": "氏名",
     "contact-email": "メールアドレス",

@@ -67,6 +67,11 @@ export default {
       errorMessage: ''
     };
   },
+  watch: {
+    advice() {
+      this.newAdvice = this.advice;
+    }
+  },
   methods: {
     updateAdvice: async function updateAdvice() {
       try {

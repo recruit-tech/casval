@@ -13,6 +13,7 @@
     "completed": "Completed",
     "approved": "Approved",
     "name": "Audit Name",
+    "description": "Audit Description",
     "contact": "Contacts",
     "contact-name": "Name",
     "contact-email": "E-mail",

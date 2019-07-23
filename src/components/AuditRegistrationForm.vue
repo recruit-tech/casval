@@ -1,11 +1,19 @@
 <template>
   <div>
-    <div class="row py-3">
+    <div class="row pt-3 pb-3">
       <div class="col-2 pt-1 mt-1 text-secondary">
         {{ $t('audit.name') }}
       </div>
       <div class="col">
-        <input type="text" class="form-control " v-model="name" :placeholder="$t('audit.name')" />
+        <input type="text" class="form-control" v-model="name" :placeholder="$t('audit.name')" />
+      </div>
+    </div>
+    <div class="row pb-3">
+      <div class="col-2 pt-1 mt-1 text-secondary">
+        {{ $t('audit.description') }}
+      </div>
+      <div class="col">
+        <input type="text" class="form-control" v-model="description" :placeholder="$t('audit.description')" />
       </div>
     </div>
     <div class="row pb-3" v-for="(contact, index) in contacts" :key="index">
@@ -55,7 +63,8 @@ export default {
     return {
       contacts: [{ name: '', email: '' }],
       errorMessage: '',
-      name: ''
+      name: '',
+      description: ''
     };
   },
   methods: {
@@ -105,6 +114,7 @@ export default {
       try {
         const res = await this.auditApiClient.post('/', {
           name: this.name,
+          description: this.description,
           contacts: noEmptyContacts
         });
         switch (res.status) {
@@ -112,6 +122,7 @@ export default {
             this.contacts = [{ name: '', email: '' }];
             this.errorMessage = '';
             this.name = '';
+            this.description = '';
             window.location.reload(true);
             break;
           }
