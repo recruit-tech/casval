@@ -21,10 +21,10 @@
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.8.0",
     "@vue/cli-plugin-eslint": "^3.8.0",
-    "@vue/cli-service": "^3.8.0",
+    "@vue/cli-service": "^3.8.4",
     "@vue/eslint-config-airbnb": "^4.0.0",
     "node-sass": "^4.12.0",
-    "prettier": "^1.17.1",
+    "prettier": "^1.18.2",
     "prettier-webpack-plugin": "^1.2.0",
     "sass-loader": "^7.1.0",
     "vue-template-compiler": "^2.6.10"
