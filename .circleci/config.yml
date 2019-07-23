@@ -9,7 +9,9 @@ jobs:
       - run:
           name: Instsall dependency package
           working_directory: ui/
-          command: npm ci
+          command: |
+            npm install
+            npm ci
       - run:
           name: Build casval-ui
           working_directory: ui/
@@ -30,7 +32,9 @@ jobs:
       - run:
           name: Instsall dependency package
           working_directory: admin-ui/
-          command: npm ci
+          command: |
+            npm install
+            npm ci
       - run:
           name: Build casval-ui
           working_directory: admin-ui/
