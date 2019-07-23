@@ -1,3 +1,4 @@
+import logging
 import os
 
 from flask import Flask
@@ -18,10 +19,15 @@ from core import marshmallow
 
 app = Flask(__name__)
 
-# logger = logging.getLogger("peewee")
-# logger.addHandler(logging.StreamHandler())
-# logger.setLevel(logging.DEBUG)
+logger = logging.getLogger("peewee")
+logger.addHandler(logging.StreamHandler())
+logger.setLevel(logging.WARNING)
 
+if app.debug == True:
+    import nplusone.ext.peewee  # noqa
+
+    app.config["NPLUSONE_LOGGER"] = logging.getLogger("app.nplusone")
+    app.config["NPLUSONE_LOG_LEVEL"] = logging.WARNING
 
 if len(os.getenv("CONFIG_ENV_FILE_PATH", "")) > 0:
     # For production environment

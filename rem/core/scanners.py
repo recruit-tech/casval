@@ -51,6 +51,7 @@ class OpenVASScanner:
     def launch_scan(self, target):
         try:
             app.logger.info("[Scanner] Trying to launch new scan session...")
+
             ov_scan_id, ov_target_id = self.conn.launch_scan(
                 target=target, profile=self.profile, alive_test=self.alive_test
             )
@@ -149,14 +150,14 @@ class OpenVASScanner:
         self.conn.delete_scan(self.session["blob"]["openvas_scan_id"])
         self.conn.delete_target(self.session["blob"]["openvas_target_id"])
 
-    def terminate_scan(self):
+    def delete_scan(self):
         try:
-            app.logger.info("[Scanner] Trying to terminate scan session...")
+            app.logger.info("[Scanner] Trying to delete scan session...")
 
             self.conn.delete_scan(self.session["blob"]["openvas_scan_id"])
             self.conn.delete_target(self.session["blob"]["openvas_target_id"])
 
-            app.logger.info("[Scanner] Terminated.")
+            app.logger.info("[Scanner] Deleted.")
             return True
         except Exception as error:
             app.logger.error(error)

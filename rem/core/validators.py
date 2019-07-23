@@ -74,11 +74,13 @@ class ContactSchema(marshmallow.Schema):
 
 class AuditInputSchema(marshmallow.Schema):
     name = marshmallow.String(required=True, validate=[validate.Length(min=1, max=128)])
+    description = marshmallow.String(required=False, validate=[validate.Length(min=0, max=128)])
     contacts = marshmallow.Nested(ContactSchema, required=True, many=True, validate=validate.Length(min=1))
 
 
 class AuditUpdateSchema(marshmallow.Schema):
     name = marshmallow.String(required=False, validate=[validate.Length(min=1, max=128)])
+    description = marshmallow.String(required=False, validate=[validate.Length(min=0, max=128)])
     contacts = marshmallow.Nested(ContactSchema, required=False, many=True, validate=validate.Length(min=1))
     password = marshmallow.String(required=False, validate=[validate.Length(min=8, max=128)])
     submitted = marshmallow.Boolean(required=True)

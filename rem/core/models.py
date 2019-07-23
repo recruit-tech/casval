@@ -20,6 +20,7 @@ class AuditTable(db.Model):
 
     uuid = UUIDField(unique=True)
     name = CharField()
+    description = CharField(default="")
     submitted = BooleanField(default=False)
     approved = BooleanField(default=False)
     ip_restriction = BooleanField(default=True)
@@ -48,6 +49,8 @@ class ScanTable(db.Model):
     target = CharField()
     start_at = DateTimeField(default=Utils.get_default_datetime)
     end_at = DateTimeField(default=Utils.get_default_datetime)
+    started_at = DateTimeField(default=Utils.get_default_datetime)
+    ended_at = DateTimeField(default=Utils.get_default_datetime)
     error_reason = CharField(default="")
     scheduled = BooleanField(default=False)
     task_uuid = UUIDField(unique=True, null=True, default=None)
