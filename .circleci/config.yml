@@ -55,6 +55,23 @@ jobs:
             gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
             gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
       - run:
+          name: Add Sops
+          working_directory: rem/
+          command: |
+            curl -LO https://github.com/mozilla/sops/releases/download/3.3.1/sops-3.3.1.linux
+            mv sops-3.3.1.linux sops
+            chmod +x sops
+      - run:
+          name: Deploy casval-rem
+          working_directory: rem/
+          command: |
+            # Need secret file for application default credential
+            echo $GCLOUD_SERVICE_KEY > secret.json
+            export GOOGLE_APPLICATION_CREDENTIALS=$PWD/secret.json
+
+            ./sops --decrypt config.enc.env > config.env
+            gcloud -q app deploy
+      - run:
           name: Deploying the casval-ui files
           working_directory: ui/
           command: |
