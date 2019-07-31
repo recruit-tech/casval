@@ -78,6 +78,9 @@ function getScanStatus(scan) {
     if (scan.error_reason.length > 0) {
       return 'failure';
     }
+    if (scan.results.some(result => result.fix_required === 'UNDEFINED')) {
+      return 'severity-unrated';
+    }
     if (scan.results.every(result => result.fix_required !== 'REQUIRED')) {
       return 'completed';
     }

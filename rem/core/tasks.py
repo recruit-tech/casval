@@ -93,6 +93,10 @@ class PendingTask(BaseTask):
         task.save()
         return task
 
+    def _set_scan_started_time(self, task):
+        now = datetime.now(tz=pytz.utc)
+        ScanTable.update({"started_at": now}).where(ScanTable.task_uuid == task["uuid"]).execute()
+
     def _process(self, task):
         running_task_num = self._get_running_task_count()
         if running_task_num >= SCAN_MAX_PARALLEL_SESSION:
@@ -132,6 +136,7 @@ class PendingTask(BaseTask):
             self._update(task, next_progress=TaskProgress.PENDING.name)
             return True
 
+        self._set_scan_started_time(task)
         session = Scanner(json.loads(task["session"])).launch_scan(task["target"])
         task["session"] = json.dumps(session)
         app.logger.info("[Pending task] Launched successfully, task={task}".format(task=task))
@@ -143,21 +148,29 @@ class RunningTask(BaseTask):
     def __init__(self):
         super().__init__(TaskProgress.RUNNING.name)
 
+    def _set_scan_ended_time(self, task):
+        now = datetime.now(tz=pytz.utc)
+        ScanTable.update({"ended_at": now}).where(ScanTable.task_uuid == task["uuid"]).execute()
+
+    def _update(self, task, next_progress):
+        self._set_scan_ended_time(task)
+        super()._update(task, next_progress)
+
     def _process(self, task):
         end_at = task["end_at"].replace(tzinfo=pytz.utc)
         now = datetime.now(tz=pytz.utc).astimezone(pytz.timezone("Asia/Tokyo"))
 
         if end_at <= now:
-            Scanner(json.loads(task["session"])).terminate_scan()
+            Scanner(json.loads(task["session"])).delete_scan()
             task["error_reason"] = "The scan has been terminated since the `end_at` is over."
-            app.logger.info("[Running Task] Scan terminated by timeout, task_uuid={task}".format(task=task))
+            app.logger.info("[Running Task] Scan deleted by timeout, task_uuid={task}".format(task=task))
             self._update(task, next_progress=TaskProgress.FAILED.name)
             return True
 
         if self._is_task_expired(task):
-            Scanner(json.loads(task["session"])).terminate_scan()
+            Scanner(json.loads(task["session"])).delete_scan()
             task["error_reason"] = "The scan has been cancelled by user."
-            app.logger.info("[Running Task] Scan terminated forcibly, task={task}".format(task=task))
+            app.logger.info("[Running Task] Scan deleted forcibly, task={task}".format(task=task))
             self._update(task, next_progress=TaskProgress.DELETED.name)
             return True
 

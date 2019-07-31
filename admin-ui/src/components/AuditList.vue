@@ -4,6 +4,7 @@
       <thead>
         <tr>
           <th scope="col">{{ $t('audit.name') }}</th>
+          <th scope="col">{{ $t('audit.description') }}</th>
           <th scope="col">{{ $t('audit.contact') }}</th>
           <th scope="col">{{ $t('audit.created-at') }}</th>
           <th scope="col">{{ $t('audit.updated-at') }}</th>
@@ -14,6 +15,9 @@
         <tr v-for="(audit, index) in audits" :key="index">
           <td>
             <a :href="`${origin}/#/${audit.uuid.substr(0, 24)}/`" target="_blank">{{ audit.name }}</a>
+          </td>
+          <td>
+            {{ audit.description }}
           </td>
           <td>
             <a :href="generateMailURL(audit)">

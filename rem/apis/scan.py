@@ -46,6 +46,8 @@ ScanOutputModel = api.model(
         "processed": fields.Boolean(required=True),
         "start_at": fields.DateTime(required=True),
         "end_at": fields.DateTime(required=True),
+        "started_at": fields.DateTime(required=True),
+        "ended_at": fields.DateTime(required=True),
         "results": fields.List(fields.Nested(ScanResultModel), required=True),
     },
 )
@@ -134,6 +136,8 @@ class ScanSchedule(Resource):
                 }
             )
 
+            params["started_at"] = Utils.get_default_datetime()
+            params["ended_at"] = Utils.get_default_datetime()
             params["task_uuid"] = task.uuid
             params["scheduled"] = True
             ScanTable.update(params).where(ScanTable.id == scan["id"]).execute()
@@ -154,6 +158,8 @@ class ScanSchedule(Resource):
         data = {
             "start_at": Utils.get_default_datetime(),
             "end_at": Utils.get_default_datetime(),
+            "started_at": Utils.get_default_datetime(),
+            "ended_at": Utils.get_default_datetime(),
             "scheduled": False,
             "task_uuid": None,
         }

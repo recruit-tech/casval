@@ -24,8 +24,11 @@
             <b class="card-text text-danger" v-else-if="scan.calculatedState === 'failure'">
               <font-awesome-icon icon="exclamation-circle"></font-awesome-icon> {{ $t('home.scan.status.failure') }}
             </b>
+            <b class="card-text text-dark" v-else-if="scan.calculatedState === 'severity-unrated'">
+              {{ $t('home.scan.status.severity-unrated') }}
+            </b>
             <b class="card-text text-dark" v-else-if="scan.calculatedState === 'completed'">
-              {{ $t('home.scan.status.completed') }}
+              <font-awesome-icon icon="check-circle"></font-awesome-icon> {{ $t('home.scan.status.completed') }}
             </b>
             <b class="card-text text-danger" v-else-if="scan.calculatedState === 'unsafe'">
               <font-awesome-icon icon="exclamation-circle"></font-awesome-icon> {{ $t('home.scan.status.unsafe') }}
@@ -52,7 +55,11 @@
             >
             </scan-panel-scheduler>
             <scan-panel-result
-              v-else-if="scan.calculatedState === 'completed' || scan.calculatedState === 'unsafe'"
+              v-else-if="
+                scan.calculatedState === 'completed' ||
+                  scan.calculatedState === 'unsafe' ||
+                  scan.calculatedState === 'severity-unrated'
+              "
               :scan="scan"
               :scan-api-client="scanApiClient"
             >
@@ -104,6 +111,10 @@ export default {
   },
   methods: {
     deleteScan: async function deleteScan() {
+      if (window.confirm(this.$i18n.t('home.scan.confirm-deletion')) !== true) {
+        return;
+      }
+
       try {
         const res = await this.scanApiClient.delete(`/${this.scan.uuid}/`);
         switch (res.status) {
