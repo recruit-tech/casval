@@ -34,6 +34,7 @@
       "time-unspecified": "時間指定なし",
       "end-datetime": "終了期限",
       "schedule": "検査を予約",
+      "scan-from-api": "APIで検査を予約",
       "error-general": "スケジュールの登録に失敗しました",
       "scheduled": "{start} - {end}の間に検査します。",
       "source-ip-notification": "検査元のIPアドレスは「{sourceIp}」です。",
@@ -46,10 +47,14 @@
         "severity-unrated": "深刻度の評価が完了するまでお待ち下さい。",
         "no-critical-issues": "深刻な脆弱性は見つかりませんでした。",
         "download": "検査結果をダウンロード",
+        "write-comment": "コメントを書く",
         "ignore": "修正不要と判断",
         "reschedule": "再検査を予約",
         "fill-reason": "修正不要と判断した理由を入力してください（あと {reminingLength} 文字）",
+        "fill-comment": "コメントを入力してください（あと {reminingLength} 文字）",
+        "comment": "コメント",
         "reason": "判断理由",
+        "submit-comment": "コメントを登録",
         "submit-reason": "判断理由を登録"
       }
     },
@@ -92,6 +97,11 @@
         "cancel": "キャンセル",
         "error-invalid-password": "{minLength}文字以上のパスワードを入力してください",
         "error-general": "アクセス制限の適用に失敗しました"
+      },
+      "scan-from-api": {
+        "title": "APIによる検査",
+        "message": "以下のcurlコマンドを用いて、CIから検査を行うことができます。",
+        "cancel": "キャンセル"
       },
       "scan-warning": {
         "title": "注意",

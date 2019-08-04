@@ -34,6 +34,7 @@
       "time-unspecified": "No schedule time specified",
       "end-datetime": "Scan end by",
       "schedule": "Schedule scan session",
+      "scan-from-api": "Scan from API",
       "error-general": "Failed to schedule the session",
       "scheduled": "Scan the target between {start} - {end}.",
       "source-ip-notification": "The audit attempts will be coming from {sourceIp}.",
@@ -46,10 +47,14 @@
         "severity-unrated": "Now rating severity of newly found vulnerabilities.",
         "no-critical-issues": "No critical issues",
         "download": "Download scan result",
+        "write-comment": "Comment",
         "ignore": "Decide not to implement correction",
         "reschedule": "Reschedule scan session",
         "fill-reason": "Fill in the reason not to implement correction against the vulnerabilities (remining {reminingLength} characters).",
+        "fill-comment": "Fill in the comment (remining {reminingLength} characters).",
+        "comment": "Comment",
         "reason": "Reason for risk acceptance",
+        "submit-comment": "Submit the comment",
         "submit-reason": "Submit the reason"
       }
     },
@@ -92,6 +97,11 @@
         "cancel": "Cancel",
         "error-invalid-password": "Specify password that length is more than or equals to {minLength}",
         "error-general": "Failed to apply access control"
+      },
+      "scan-from-api": {
+        "title": "Scan from API",
+        "message": "You can schedule a scan session from CI by using following curl command.",
+        "cancel": "キャンセル"
       },
       "scan-warning": {
         "title": "Caution",

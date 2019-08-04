@@ -3,7 +3,7 @@
     <div class="d-flex align-items-start flex-row">
       <div class="py-1">
         <small class="text-dark">
-          {{ $t('home.scan.result.fill-reason', { reminingLength: reminingStringLength }) }}<br />
+          {{ guideMessage }}<br />
           <span class="text-danger">{{ errorMessage }}</span>
         </small>
       </div>
@@ -13,7 +13,7 @@
         <textarea
           class="form-control form-control-sm"
           rows="5"
-          :placeholder="$t('home.scan.result.reason')"
+          :placeholder="textareaPlaceholder"
           v-model="comment"
         ></textarea>
       </div>
@@ -26,7 +26,7 @@
             {{ $t('home.scan.back') }}
           </button>
           <button type="button" class="btn btn-primary" @click="registerComment">
-            <font-awesome-icon icon="pencil-alt"></font-awesome-icon> {{ $t('home.scan.result.submit-reason') }}
+            <font-awesome-icon icon="pencil-alt"></font-awesome-icon> {{ commentButtonTitle }}
           </button>
         </div>
       </div>
@@ -79,6 +79,21 @@ export default {
     }
   },
   computed: {
+    isFixRequired: function isFixRequired() {
+      return this.scan.results.some(result => result.fix_required === 'REQUIRED');
+    },
+    guideMessage: function guideMessage() {
+      const text = this.isFixRequired ? 'home.scan.result.fill-reason' : 'home.scan.result.fill-comment';
+      return this.$i18n.t(text, { reminingLength: this.reminingStringLength });
+    },
+    textareaPlaceholder: function textareaPlaceholder() {
+      const text = this.isFixRequired ? 'home.scan.result.reason' : 'home.scan.result.comment';
+      return this.$i18n.t(text);
+    },
+    commentButtonTitle: function commentButtonTitle() {
+      const title = this.isFixRequired ? 'home.scan.result.submit-reason' : 'home.scan.result.submit-comment';
+      return this.$i18n.t(title);
+    },
     reminingStringLength: function getReminingStringLength() {
       const maxLength = 1000;
       return maxLength - this.comment.length;

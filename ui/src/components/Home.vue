@@ -50,7 +50,11 @@
     </div>
 
     <div v-for="scanUUID in scanOrder" :key="scanUUID" :class="{ grayscale: isNonEditable }">
-      <scan-panel :scan="scans[scanUUID]" :scan-api-client="scanApiClient"></scan-panel>
+      <scan-panel
+        :scan="scans[scanUUID]"
+        :scan-api-client="scanApiClient"
+        :restricted-token="restrictedToken"
+      ></scan-panel>
     </div>
     <div class="pt-5 pb-5"></div>
     <modal-contacts :audit="audit" :audit-api-client="auditApiClient"></modal-contacts>
@@ -105,6 +109,10 @@ export default {
     },
     scanApiClient: {
       type: Function,
+      required: true
+    },
+    restrictedToken: {
+      type: String,
       required: true
     }
   },

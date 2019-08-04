@@ -59,18 +59,33 @@
           <font-awesome-icon icon="arrow-left"></font-awesome-icon>
           {{ $t('home.scan.back') }}
         </button>
-        <button class="btn btn-primary" @click="schedule">
-          <font-awesome-icon icon="clock"></font-awesome-icon> {{ $t('home.scan.schedule') }}
-        </button>
+        <div class="btn-group">
+          <button class="btn btn-primary" @click="schedule">
+            <font-awesome-icon icon="clock"></font-awesome-icon> {{ $t('home.scan.schedule') }}
+          </button>
+
+          <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" />
+          <div class="dropdown-menu">
+            <button href="#" class="dropdown-item" v-on:click="scanFromApi">{{ $t('home.scan.scan-from-api') }}</button>
+          </div>
+        </div>
       </div>
     </div>
-    <modal-scan-warning :modal-id="modalId" :source-ip="sourceIp" @set-schedule="setSchedule" />
+    <modal-scan-from-api
+      :modal-id="apiScanModalId"
+      :scan="scan"
+      :restricted-token="restrictedToken"
+      :start-at="startAt"
+      :end-at="endAt"
+    />
+    <modal-scan-warning :modal-id="warningModalId" :source-ip="sourceIp" @set-schedule="setSchedule" />
   </div>
 </template>
 
 <script>
 import $ from 'jquery';
 import moment from 'moment';
+import ModalScanFromApi from './ModalScanFromApi.vue';
 import ModalScanWarning from './ModalScanWarning.vue';
 
 export default {
@@ -83,14 +98,20 @@ export default {
     scanApiClient: {
       type: Function,
       required: true
+    },
+    restrictedToken: {
+      type: String,
+      required: true
     }
   },
   components: {
+    ModalScanFromApi,
     ModalScanWarning
   },
   data() {
     return {
-      modalId: `modal-scan-warning-${this.scan.uuid}`,
+      apiScanModalId: `modal-scan-from-api-${this.scan.uuid}`,
+      warningModalId: `modal-scan-warning-${this.scan.uuid}`,
       sourceIp: this.scan.source_ip,
       currentTime: null,
       errorMessage: this.scan.error_reason,
@@ -101,43 +122,20 @@ export default {
     };
   },
   methods: {
+    scanFromApi: function scanFromApi() {
+      $(`#${this.apiScanModalId}`).modal('show');
+    },
     schedule: function schedule() {
-      $(`#${this.modalId}`).modal('show');
+      $(`#${this.warningModalId}`).modal('show');
     },
     cancelReschedule: async function cancelReschedule() {
       this.$parent.requireReschedule = false;
     },
     setSchedule: async function setSchedule() {
-      let registerStartDate = this.startDate;
-      if (registerStartDate.length === 0) {
-        registerStartDate = this.startDateCandidates[0].value;
-      }
-      let registerStartTime = this.startTime;
-      if (registerStartTime.length === 0) {
-        registerStartTime = this.startTimeCandidates[0].value;
-      }
-      let registerEndDate = this.endDate;
-      if (registerEndDate.length === 0) {
-        registerEndDate = this.endDateCandidates[this.endDateCandidates.length - 1].value;
-      }
-      let registerEndTime = this.endTime;
-      if (registerEndTime.length === 0) {
-        registerEndTime = this.endTimeCandidates[this.endTimeCandidates.length - 1].value;
-      }
-      const utcOffset = moment().utcOffset();
-      const startAt = moment(`${registerStartDate} ${registerStartTime}`, 'YYYY-MM-DD HH-mm-ss').subtract(
-        utcOffset,
-        'minutes'
-      );
-      const endAt = moment(`${registerEndDate} ${registerEndTime}`, 'YYYY-MM-DD HH-mm-ss').subtract(
-        utcOffset,
-        'minutes'
-      );
-
       try {
         const res = await this.scanApiClient.patch(`${this.scan.uuid}/schedule/`, {
-          start_at: startAt.format('YYYY-MM-DDTHH:mm:ss'),
-          end_at: endAt.format('YYYY-MM-DDTHH:mm:ss')
+          start_at: this.startAt.format('YYYY-MM-DDTHH:mm:ss'),
+          end_at: this.endAt.format('YYYY-MM-DDTHH:mm:ss')
         });
         switch (res.status) {
           case 200: {
@@ -156,6 +154,32 @@ export default {
     }
   },
   computed: {
+    startAt: function startAt() {
+      let registerStartDate = this.startDate;
+      if (registerStartDate.length === 0) {
+        registerStartDate = this.startDateCandidates[0].value;
+      }
+      let registerStartTime = this.startTime;
+      if (registerStartTime.length === 0) {
+        registerStartTime = this.startTimeCandidates[0].value;
+      }
+      const utcOffset = moment().utcOffset();
+      return moment(`${registerStartDate} ${registerStartTime}`, 'YYYY-MM-DD HH-mm-ss').subtract(utcOffset, 'minutes');
+    },
+
+    endAt: function endAt() {
+      let registerEndDate = this.endDate;
+      if (registerEndDate.length === 0) {
+        registerEndDate = this.endDateCandidates[this.endDateCandidates.length - 1].value;
+      }
+      let registerEndTime = this.endTime;
+      if (registerEndTime.length === 0) {
+        registerEndTime = this.endTimeCandidates[this.endTimeCandidates.length - 1].value;
+      }
+      const utcOffset = moment().utcOffset();
+
+      return moment(`${registerEndDate} ${registerEndTime}`, 'YYYY-MM-DD HH-mm-ss').subtract(utcOffset, 'minutes');
+    },
     earliestStartDateTime: function getEarliestStartDateTime() {
       // The estimated earliest start date time is used when start date is not specified by user
       return this.currentTime
