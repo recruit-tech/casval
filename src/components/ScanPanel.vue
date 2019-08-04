@@ -52,6 +52,7 @@
               "
               :scan="scan"
               :scan-api-client="scanApiClient"
+              :restricted-token="restrictedToken"
             >
             </scan-panel-scheduler>
             <scan-panel-result
@@ -86,6 +87,10 @@ export default {
     },
     scanApiClient: {
       type: Function,
+      required: true
+    },
+    restrictedToken: {
+      type: String,
       required: true
     }
   },

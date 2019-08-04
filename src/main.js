@@ -16,6 +16,7 @@ import { faChevronCircleRight } from '@fortawesome/free-solid-svg-icons/faChevro
 import { faClock } from '@fortawesome/free-solid-svg-icons/faClock';
 import { faDownload } from '@fortawesome/free-solid-svg-icons/faDownload';
 import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons/faExclamationCircle';
+import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons/faQuestionCircle';
 import { faPencilAlt } from '@fortawesome/free-solid-svg-icons/faPencilAlt';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons/faSpinner';
 import { faFileUpload } from '@fortawesome/free-solid-svg-icons/faFileUpload';
@@ -54,6 +55,7 @@ library.add(
   faClock,
   faDownload,
   faExclamationCircle,
+  faQuestionCircle,
   faPencilAlt,
   faSpinner,
   faFileUpload

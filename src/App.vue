@@ -1,7 +1,13 @@
 <template>
   <div id="app" class="h-100">
     <entrance :status="status" v-if="status !== 'loaded'"></entrance>
-    <home :audit="audit" :audit-api-client="auditApiClient" :scan-api-client="scanApiClient" v-else></home>
+    <home
+      :audit="audit"
+      :audit-api-client="auditApiClient"
+      :scan-api-client="scanApiClient"
+      :restricted-token="restrictedToken"
+      v-else
+    ></home>
   </div>
 </template>
 
@@ -17,7 +23,8 @@ export default {
       audit: null,
       auditUUID: '',
       status: 'loading',
-      token: null
+      token: null,
+      restrictedToken: null
     };
   },
   components: {
@@ -37,7 +44,7 @@ export default {
       return axios.create({
         baseURL: `${process.env.VUE_APP_API_ENDPOINT}/scan`,
         timeout: process.env.API_REQUEST_TIMEOUT,
-        headers: { Authorization: `Bearer ${this.token}` },
+        headers: { Authorization: `Bearer ${this.restrictedToken}` },
         validateStatus: () => true
       });
     }
@@ -50,7 +57,7 @@ export default {
         switch (res.status) {
           case 200:
             this.token = res.data.token;
-            this.getAudit();
+            this.generateRestrictedToken();
             break;
           case 401:
             this.status = 'restricted-by-password';
@@ -64,6 +71,15 @@ export default {
           default:
             this.status = 'unknown-error';
         }
+      } catch (e) {
+        this.status = 'unknown-error';
+      }
+    },
+    generateRestrictedToken: async function generateRestrictedToken() {
+      try {
+        const res = await this.auditApiClient.post('/tokens/restricted');
+        this.restrictedToken = res.data.token;
+        this.getAudit();
       } catch (e) {
         this.status = 'unknown-error';
       }

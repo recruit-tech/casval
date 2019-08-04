@@ -24,10 +24,11 @@
       </small>
     </div>
     <div class="pt-3">
-      <div class="form-row" v-if="isFixRequired">
+      <div class="form-row">
         <div class="col text-right">
           <button
-            class="btn mr-3"
+            v-if="isFixRequired || commentEnabled"
+            class="btn"
             :class="{
               'btn-outline-secondary': scan.calculatedState !== 'unsafe',
               'btn-secondary': scan.calculatedState === 'unsafe',
@@ -35,10 +36,11 @@
             }"
             @click="setComment"
           >
-            <font-awesome-icon icon="pencil-alt"></font-awesome-icon> {{ $t('home.scan.result.ignore') }}
+            <font-awesome-icon icon="pencil-alt"></font-awesome-icon> {{ commentButtonTitle }}
           </button>
           <button
-            class="btn"
+            v-if="isFixRequired"
+            class="btn ml-3"
             :class="{
               'btn-outline-secondary': scan.calculatedState !== 'unsafe',
               'btn-primary': scan.calculatedState === 'unsafe',
@@ -72,7 +74,8 @@ export default {
   },
   data() {
     return {
-      updateTimer: null
+      updateTimer: null,
+      commentEnabled: process.env.VUE_APP_SCAN_COMMENT_ENABLED === 'true'
     };
   },
   components: {
@@ -92,6 +95,10 @@ export default {
     }
   },
   computed: {
+    commentButtonTitle: function commentButtonTitle() {
+      const title = this.isFixRequired ? 'home.scan.result.ignore' : 'home.scan.result.write-comment';
+      return this.$i18n.t(title);
+    },
     isFixRequired: function isFixRequired() {
       return this.scan.results.some(result => result.fix_required === 'REQUIRED');
     },
