@@ -71,6 +71,8 @@ class TaskTable(db.Model):
     target = CharField()
     start_at = DateTimeField(default=Utils.get_default_datetime)
     end_at = DateTimeField(default=Utils.get_default_datetime)
+    started_at = DateTimeField(default=Utils.get_default_datetime)
+    ended_at = DateTimeField(default=Utils.get_default_datetime)
     error_reason = CharField(default="")
     session = TextField(default="")
     progress = CharField()

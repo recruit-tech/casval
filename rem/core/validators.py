@@ -19,10 +19,22 @@ AUDIT_GET_DEFAULT_COUNT = 10
 SCAN_MAX_COMMENT_LENGTH = 1000
 
 SCAN_SCHEDULABLE_DAYS_FROM_NOW = 10
-SCAN_SCHEDULABLE_DAYS_FROM_START_DATE = 5
 SCAN_MIN_DURATION_IN_SECONDS = 3600  # 1 hours
 
 VULN_FIX_REQUIRED_STATUS = ["REQUIRED", "RECOMMENDED", "OPTIONAL", "UNDEFINED", ""]
+
+
+class Validators:
+    @staticmethod
+    def validate_target(value):
+        if Utils.is_ipv4(value):
+            if not Utils.is_public_address(value):
+                raise ValidationError(ErrorReasonEnum.target_is_private_ip.name)
+        elif Utils.is_domain(value):
+            if not Utils.is_host_resolvable(value):
+                raise ValidationError(ErrorReasonEnum.could_not_resolve_target_fqdn.name)
+        else:
+            raise ValidationError(ErrorReasonEnum.target_is_not_fqdn_or_ipv4.name)
 
 
 class ErrorReasonEnum(IntFlag):
@@ -52,8 +64,10 @@ class AuthInputSchema(marshmallow.Schema):
 
 
 class AuditListInputSchema(PagenationInputSchema):
-    submitted = marshmallow.Boolean(required=False, missing=False)
-    approved = marshmallow.Boolean(required=False, missing=False)
+    unsafe_only = marshmallow.Boolean(required=False)
+    submitted = marshmallow.Boolean(required=False)
+    approved = marshmallow.Boolean(required=False)
+    keyword = marshmallow.String(required=False)
 
 
 class AuditTokenInputSchema(marshmallow.Schema):
@@ -95,17 +109,11 @@ class ScanInputSchema(marshmallow.Schema):
 
     @validates("target")
     def validate_target(self, value):
-        if Utils.is_ipv4(value):
-            if not Utils.is_public_address(value):
-                raise ValidationError(ErrorReasonEnum.target_is_private_ip.name)
-        elif Utils.is_domain(value):
-            if not Utils.is_host_resolvable(value):
-                raise ValidationError(ErrorReasonEnum.could_not_resolve_target_fqdn.name)
-        else:
-            raise ValidationError(ErrorReasonEnum.target_is_not_fqdn_or_ipv4.name)
+        Validators.validate_target(value)
 
 
 class ScanUpdateSchema(marshmallow.Schema):
+    target = marshmallow.String(required=False)
     start_at = marshmallow.DateTime(required=True)
     end_at = marshmallow.DateTime(required=True)
     task_uuid = marshmallow.String(required=True)
@@ -113,6 +121,10 @@ class ScanUpdateSchema(marshmallow.Schema):
     comment = marshmallow.String(
         required=True, validate=[validate.Length(min=0, max=SCAN_MAX_COMMENT_LENGTH)]
     )
+
+    @validates("target")
+    def validate_target(self, value):
+        Validators.validate_target(value)
 
     @validates_schema
     def validate_schedule(self, value):
@@ -138,12 +150,6 @@ class ScanUpdateSchema(marshmallow.Schema):
                 raise ValidationError(
                     "Duration between 'end_at' and 'start_at' must be equal or more than {} seconds".format(
                         SCAN_MIN_DURATION_IN_SECONDS
-                    )
-                )
-            if scan_duration.days > SCAN_SCHEDULABLE_DAYS_FROM_START_DATE:
-                raise ValidationError(
-                    "Duration between 'end_at' and 'start_at' within {} days".format(
-                        SCAN_SCHEDULABLE_DAYS_FROM_START_DATE
                     )
                 )
 

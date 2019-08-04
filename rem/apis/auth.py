@@ -38,5 +38,5 @@ class Authenticate(Resource):
         if params["password"] != app.config["ADMIN_PASSWORD"]:
             abort(401, "Invalid password")
 
-        token = create_access_token(identity={"scope": "*"})
+        token = create_access_token(identity={"scope": "*", "restricted": False})
         return {"token": token}, 200

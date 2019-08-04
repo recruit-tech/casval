@@ -28,6 +28,7 @@ else:
 
 SCAN_MAX_PARALLEL_SESSION = os.getenv("SCAN_MAX_PARALLEL_SESSION", 1)
 SCAN_REPORT_KEY_NAME = "{audit_id:08}-{scan_id:08}-{task_uuid:.8}.xml"
+SCAN_MAX_DURATION_IN_HOUR = 24
 
 
 class TaskProgress(Enum):
@@ -105,7 +106,7 @@ class PendingTask(BaseTask):
 
         start_at = task["start_at"].replace(tzinfo=pytz.utc)
         end_at = task["end_at"].replace(tzinfo=pytz.utc)
-        now = datetime.now(tz=pytz.utc).astimezone(pytz.timezone("Asia/Tokyo"))
+        now = datetime.now(tz=pytz.utc)
 
         if start_at > now:
             # The scheduled time has not come yet.
@@ -139,6 +140,7 @@ class PendingTask(BaseTask):
         self._set_scan_started_time(task)
         session = Scanner(json.loads(task["session"])).launch_scan(task["target"])
         task["session"] = json.dumps(session)
+        task["started_at"] = now
         app.logger.info("[Pending task] Launched successfully, task={task}".format(task=task))
         self._update(task, next_progress=TaskProgress.RUNNING.name)
         return True
@@ -148,22 +150,34 @@ class RunningTask(BaseTask):
     def __init__(self):
         super().__init__(TaskProgress.RUNNING.name)
 
-    def _set_scan_ended_time(self, task):
+    def _update(self, task, next_progress):
         now = datetime.now(tz=pytz.utc)
         ScanTable.update({"ended_at": now}).where(ScanTable.task_uuid == task["uuid"]).execute()
-
-    def _update(self, task, next_progress):
-        self._set_scan_ended_time(task)
+        task["ended_at"] = now
         super()._update(task, next_progress)
 
     def _process(self, task):
         end_at = task["end_at"].replace(tzinfo=pytz.utc)
-        now = datetime.now(tz=pytz.utc).astimezone(pytz.timezone("Asia/Tokyo"))
+        started_at = task["started_at"].replace(tzinfo=pytz.utc)
+        now = datetime.now(tz=pytz.utc)
+
+        if now > (started_at + timedelta(hours=SCAN_MAX_DURATION_IN_HOUR)):
+            Scanner(json.loads(task["session"])).delete_scan()
+            task[
+                "error_reason"
+            ] = "The scan has been terminated since the scan took more than {} hours.".format(
+                SCAN_MAX_DURATION_IN_HOUR
+            )
+            app.logger.info("[Running Task] Scan deleted by timeout, task_uuid={task}".format(task=task))
+            self._update(task, next_progress=TaskProgress.FAILED.name)
+            return True
 
         if end_at <= now:
             Scanner(json.loads(task["session"])).delete_scan()
             task["error_reason"] = "The scan has been terminated since the `end_at` is over."
-            app.logger.info("[Running Task] Scan deleted by timeout, task_uuid={task}".format(task=task))
+            app.logger.info(
+                "[Running Task] Scan deleted since it exceeded end_at, task_uuid={task}".format(task=task)
+            )
             self._update(task, next_progress=TaskProgress.FAILED.name)
             return True
 
