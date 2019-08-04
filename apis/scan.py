@@ -104,7 +104,11 @@ class ScanSchedule(Resource):
 
     ScanSchedulePatchInputModel = api.model(
         "ScanSchedulePatchInput",
-        {"start_at": fields.DateTime(required=True), "end_at": fields.DateTime(required=True)},
+        {
+            "target": fields.String(required=False),
+            "start_at": fields.DateTime(required=False),
+            "end_at": fields.DateTime(required=False),
+        },
     )
 
     @api.expect(ScanSchedulePatchInputModel)
@@ -119,10 +123,13 @@ class ScanSchedule(Resource):
         if scan["scheduled"] == True:
             abort(400, "Already scheduled")
 
-        schema = ScanUpdateSchema(only=["start_at", "end_at"])
+        schema = ScanUpdateSchema(only=["target", "start_at", "end_at"])
         params, errors = schema.load(request.json)
         if errors:
             abort(400, errors)
+
+        if "target" in params:
+            scan["target"] = params["target"]
 
         with db.database.atomic():
 
