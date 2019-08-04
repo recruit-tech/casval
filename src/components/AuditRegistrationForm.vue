@@ -1,50 +1,56 @@
 <template>
-  <div>
-    <div class="row pt-3 pb-3">
-      <div class="col-2 pt-1 mt-1 text-secondary">
-        {{ $t('audit.name') }}
-      </div>
-      <div class="col">
-        <input type="text" class="form-control" v-model="name" :placeholder="$t('audit.name')" />
-      </div>
-    </div>
-    <div class="row pb-3">
-      <div class="col-2 pt-1 mt-1 text-secondary">
-        {{ $t('audit.description') }}
-      </div>
-      <div class="col">
-        <input type="text" class="form-control" v-model="description" :placeholder="$t('audit.description')" />
-      </div>
-    </div>
-    <div class="row pb-3" v-for="(contact, index) in contacts" :key="index">
-      <div class="col-2 pt-1 mt-1 text-secondary">{{ $t('audit.contact') }} {{ index + 1 }}</div>
-      <div class="col-4">
-        <input
-          type="text"
-          class="form-control"
-          v-model="contact.name"
-          :placeholder="$t('audit.contact-name')"
-          @keydown="addInputForm(index)"
-        />
-      </div>
-      <div class="col">
-        <input
-          type="text"
-          class="form-control"
-          v-model="contact.email"
-          :placeholder="$t('audit.contact-email')"
-          @keydown="addInputForm(index)"
-        />
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        <small class="text-danger">{{ errorMessage }}</small>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col text-right">
-        <button class="btn btn-primary" @click="addAudit">{{ $t('audit.register') }}</button>
+  <div class="col py-5">
+    <div class="card">
+      <div class="card-body">
+        <div class="h5">{{ $t('audit.register-new-audit') }}</div>
+        <hr class="mb-2" />
+        <div class="row pt-3 pb-3">
+          <div class="col-2 pt-1 mt-1 text-secondary">
+            {{ $t('audit.name') }}
+          </div>
+          <div class="col">
+            <input type="text" class="form-control" v-model="name" :placeholder="$t('audit.name')" />
+          </div>
+        </div>
+        <div class="row pb-3">
+          <div class="col-2 pt-1 mt-1 text-secondary">
+            {{ $t('audit.description') }}
+          </div>
+          <div class="col">
+            <input type="text" class="form-control" v-model="description" :placeholder="$t('audit.description')" />
+          </div>
+        </div>
+        <div class="row pb-3" v-for="(contact, index) in contacts" :key="index">
+          <div class="col-2 pt-1 mt-1 text-secondary">{{ $t('audit.contact') }} {{ index + 1 }}</div>
+          <div class="col-4">
+            <input
+              type="text"
+              class="form-control"
+              v-model="contact.name"
+              :placeholder="$t('audit.contact-name')"
+              @keydown="addInputForm(index)"
+            />
+          </div>
+          <div class="col">
+            <input
+              type="text"
+              class="form-control"
+              v-model="contact.email"
+              :placeholder="$t('audit.contact-email')"
+              @keydown="addInputForm(index)"
+            />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <small class="text-danger">{{ errorMessage }}</small>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col text-right">
+            <button class="btn btn-primary" @click="addAudit">{{ $t('audit.register') }}</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
