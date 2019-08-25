@@ -9,7 +9,8 @@
           <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
         </div>
         <div class="modal-body">
-          {{ $t('home.modal.scan-from-api.message') }}<br />
+          {{ $t('home.modal.scan-from-api.message1') }}
+          <span v-html="$t('home.modal.scan-from-api.message2')"></span><br />
           <pre class="rounded bg-dark text-light text-wrap my-2 p-2 select-all">{{ curlCommand }}</pre>
         </div>
         <div class="modal-footer">
@@ -49,7 +50,6 @@ export default {
   },
   methods: {
     selectAll: function selectAll() {
-      window.aa = this;
       this.select();
     }
   },
@@ -58,7 +58,7 @@ export default {
       const startAt = this.startAt.format('YYYY-MM-DDTHH:mm:ss');
       const endAt = this.endAt.format('YYYY-MM-DDTHH:mm:ss');
 
-      return `curl '${process.env.VUE_APP_API_ENDPOINT}/scan/${this.scan.uuid}/schedule/' -X PATCH -H 'Authorization: Bearer ${this.restrictedToken}' -H 'Content-Type: application/json' -d '{"target": "${this.scan.target}", "start_at":"${startAt}","end_at":"${endAt}"}'`;
+      return `curl '${process.env.VUE_APP_API_ENDPOINT}/scan/${this.scan.uuid}/schedule/' -X PATCH -H 'Authorization: Bearer ${this.restrictedToken}' -H 'Content-Type: application/json' -d '{"target": "${this.scan.target}", "start_at":"${startAt}", "end_at":"${endAt}", "slack_webhook_url":""}'`;
     }
   }
 };

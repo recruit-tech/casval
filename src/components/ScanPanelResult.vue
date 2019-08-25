@@ -4,12 +4,12 @@
       <small class="text-dark"> {{ scanEndedAt }}<br /> </small>
       <small class="text-dark" v-if="isSeverityUnrated">
         <font-awesome-icon icon="clock" class="mr-1"></font-awesome-icon>
-        {{ $t('home.scan.result.severity-unrated') }}
+        {{ $t('home.scan.result.severity-unrated') }}<br />
       </small>
       <small class="text-dark" v-if="!isSeverityUnrated && !isFixRequired">
-        {{ $t('home.scan.result.no-critical-issues') }}
+        {{ $t('home.scan.result.no-critical-issues') }}<br />
       </small>
-      <small class="text-dark" v-for="result in scan.results" :key="result.id">
+      <small class="text-dark" v-if="!isSeverityUnrated" v-for="result in scan.results" :key="result.id">
         <span v-if="result.fix_required === 'REQUIRED'">
           <a v-tooltip="{ content: result.advice }">
             <font-awesome-icon icon="exclamation-circle" class="mr-2"></font-awesome-icon>{{ result.name }} -
@@ -20,7 +20,7 @@
       </small>
       <small v-if="scan.comment" class="text-secondary">
         <hr class="mb-3" />
-        <font-awesome-icon icon="pencil-alt" class="mr-2"></font-awesome-icon>{{ scan.comment }}
+        <font-awesome-icon icon="pencil-alt" class="mr-2"></font-awesome-icon>{{ scan.comment }}<br />
       </small>
     </div>
     <div class="pt-3">
