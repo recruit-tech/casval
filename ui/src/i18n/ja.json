@@ -63,6 +63,7 @@
       "download-audit": "検査結果をダウンロード",
       "error-download": "検査結果のダウンロードに失敗しました",
       "change-contact": "担当者情報を変更",
+      "slack-integration": "Slackとの連携",
       "restrict-access": "このページへのアクセスを制限",
       "contact-admin": "システム管理者に通知",
       "multi-host-registration": {
@@ -85,6 +86,16 @@
         "error-no-name": "氏名を空欄にできません",
         "error-general": "担当者の登録に失敗しました"
       },
+      "slack-integration": {
+        "title": "Slackとの連携",
+        "message": "Slackの<a href=\"https://api.slack.com/incoming-webhooks\" class=\"text-dark\" target=\"_blank\" rel=\"noopener noreferrer\">Incoming Webhook URL</a>を指定することで、各検査の結果をSlackのチャンネルに通知できます。APIで検査する際は、各検査の予約時にも再度指定が可能です。",
+        "incoming-webhooks": "Incoming Webhooks",
+        "incoming-webhooks-url": "Incoming Webhook URL",
+        "ok": "適用",
+        "cancel": "キャンセル",
+        "error-invalid-url": "正しいSlack Webhook URLを指定してください",
+        "error-general": "Slack連携の適用に失敗しました"
+      },
       "access-restriction": {
         "title": "アクセスを制限",
         "message": "このページで利用するアクセス制限を指定してください。",
@@ -100,7 +111,8 @@
       },
       "scan-from-api": {
         "title": "APIによる検査",
-        "message": "以下のcurlコマンドを用いて、CIから検査を行うことができます。",
+        "message1": "以下のcurlコマンドを用いて、CIから検査を行うことができます。",
+        "message2": "検査結果をSlackに通知する場合、<b>slack_webhook_url</b> に <a href=\"https://api.slack.com/incoming-webhooks\" class=\"text-dark\" target=\"_blank\" rel=\"noopener noreferrer\">Incoming Webhook URL</a> を指定ください。",
         "cancel": "キャンセル"
       },
       "scan-warning": {

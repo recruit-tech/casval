@@ -17,6 +17,9 @@
                 <a href="#" class="dropdown-item" data-toggle="modal" data-target="#modal-contacts">{{
                   $t('home.modal.change-contact')
                 }}</a>
+                <a href="#" class="dropdown-item" data-toggle="modal" data-target="#modal-slack-integration">{{
+                  $t('home.modal.slack-integration.title')
+                }}</a>
                 <a href="#" class="dropdown-item" data-toggle="modal" data-target="#modal-restriction">{{
                   $t('home.modal.restrict-access')
                 }}</a>
@@ -58,6 +61,7 @@
     </div>
     <div class="pt-5 pb-5"></div>
     <modal-contacts :audit="audit" :audit-api-client="auditApiClient"></modal-contacts>
+    <modal-slack-integration :audit="audit" :audit-api-client="auditApiClient"></modal-slack-integration>
     <modal-access-restriction :audit="audit" :audit-api-client="auditApiClient"></modal-access-restriction>
     <audit-status-bar :audit="audit" :audit-api-client="auditApiClient" :audit-status="auditStatus"></audit-status-bar>
   </div>
@@ -66,8 +70,9 @@
 <script>
 import Vue from 'vue';
 import AuditStatusBar from './AuditStatusBar.vue';
-import ModalAccessRestriction from './ModalAccessRestriction.vue';
 import ModalContacts from './ModalContacts.vue';
+import ModalSlackIntegration from './ModalSlackIntegration.vue';
+import ModalAccessRestriction from './ModalAccessRestriction.vue';
 import ScanPanel from './ScanPanel.vue';
 import TargetForm from './TargetForm.vue';
 
@@ -155,8 +160,9 @@ export default {
   },
   components: {
     AuditStatusBar,
-    ModalAccessRestriction,
     ModalContacts,
+    ModalSlackIntegration,
+    ModalAccessRestriction,
     ScanPanel,
     TargetForm
   },

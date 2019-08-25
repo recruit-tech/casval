@@ -63,6 +63,7 @@
       "download-audit": "Download audit result",
       "error-download": "Failed to download the audit result",
       "change-contact": "Update contact detail",
+      "slack-integration": "Slack integration",
       "restrict-access": "Restrict access to this page",
       "contact-admin": "Contact system administrators",
       "multi-host-registration": {
@@ -85,6 +86,16 @@
         "error-no-name": "Name field cannot be empty",
         "error-general": "Failed to register new contacts"
       },
+      "slack-integration": {
+        "title": "Slack integration",
+        "message": "You can get each scan result on your Slack channel by setting an <a href=\"https://api.slack.com/incoming-webhooks\" class=\"text-dark\" target=\"_blank\" rel=\"noopener noreferrer\">Incoming Webhook URL</a>. If schedule a scan from our API, you can override this setting.",
+        "incoming-webhooks": "Incoming Webhooks",
+        "incoming-webhooks-url": "Incoming Webhook URL",
+        "ok": "Apply",
+        "cancel": "Cancel",
+        "error-invalid-url": "Specify valid Slack webhook URL",
+        "error-general": "Failed to apply slack integration"
+      },
       "access-restriction": {
         "title": "Access restriction",
         "message": "Configure the access control for this page.",
@@ -100,7 +111,8 @@
       },
       "scan-from-api": {
         "title": "Scan from API",
-        "message": "You can schedule a scan session from CI by using following curl command.",
+        "message1": "You can schedule a scan session from CI by using following curl command.",
+        "message2": "If you'd like to get the result on Slack, set an <a href=\"https://api.slack.com/incoming-webhooks\" class=\"text-dark\" target=\"_blank\" rel=\"noopener noreferrer\">Incoming Webhook URL</a> to <b>slack_webhook_url</b>.",
         "cancel": "キャンセル"
       },
       "scan-warning": {
