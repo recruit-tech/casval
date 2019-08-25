@@ -57,19 +57,19 @@
           </thead>
           <tbody>
             <tr v-for="(audit, index) in audits" :key="index">
-              <td>
+              <td class="text-break">
                 <a :href="`${origin}/#/${audit.uuid.substr(0, 24)}/`" target="_blank">{{ audit.name }}</a>
               </td>
-              <td>
+              <td class="text-break">
                 {{ audit.description }}
               </td>
-              <td>
+              <td class="text-break">
                 <a :href="generateMailURL(audit)">
                   <span v-for="(contact, index) in audit.contacts" :key="index">{{ contact.name }}<br /></span>
                 </a>
               </td>
-              <td>{{ displayDateTime(audit.created_at) }}</td>
-              <td>{{ displayDateTime(audit.updated_at) }}</td>
+              <td class="text-break">{{ displayDateTime(audit.created_at) }}</td>
+              <td class="text-break">{{ displayDateTime(audit.updated_at) }}</td>
               <td>
                 <button
                   type="button"
