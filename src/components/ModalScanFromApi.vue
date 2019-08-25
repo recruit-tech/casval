@@ -48,6 +48,13 @@ export default {
       required: true
     }
   },
+  data() {
+    return {
+      apiEndpoint: process.env.VUE_APP_API_ENDPOINT.startsWith('http')
+        ? process.env.VUE_APP_API_ENDPOINT
+        : window.location.origin
+    };
+  },
   methods: {
     selectAll: function selectAll() {
       this.select();
@@ -58,7 +65,7 @@ export default {
       const startAt = this.startAt.format('YYYY-MM-DDTHH:mm:ss');
       const endAt = this.endAt.format('YYYY-MM-DDTHH:mm:ss');
 
-      return `curl '${process.env.VUE_APP_API_ENDPOINT}/scan/${this.scan.uuid}/schedule/' -X PATCH -H 'Authorization: Bearer ${this.restrictedToken}' -H 'Content-Type: application/json' -d '{"target": "${this.scan.target}", "start_at":"${startAt}", "end_at":"${endAt}", "slack_webhook_url":""}'`;
+      return `curl '${this.apiEndpoint}/scan/${this.scan.uuid}/schedule/' -X PATCH -H 'Authorization: Bearer ${this.restrictedToken}' -H 'Content-Type: application/json' -d '{"target": "${this.scan.target}", "start_at":"${startAt}", "end_at":"${endAt}", "slack_webhook_url":""}'`;
     }
   }
 };
