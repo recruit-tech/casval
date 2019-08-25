@@ -108,6 +108,7 @@ class ScanSchedule(Resource):
             "target": fields.String(required=False),
             "start_at": fields.DateTime(required=False),
             "end_at": fields.DateTime(required=False),
+            "slack_webhook_url": fields.String(required=False),
         },
     )
 
@@ -123,13 +124,16 @@ class ScanSchedule(Resource):
         if scan["scheduled"] == True:
             abort(400, "Already scheduled")
 
-        schema = ScanUpdateSchema(only=["target", "start_at", "end_at"])
+        schema = ScanUpdateSchema(only=["target", "start_at", "end_at", "slack_webhook_url"])
         params, errors = schema.load(request.json)
         if errors:
             abort(400, errors)
 
         if "target" in params:
             scan["target"] = params["target"]
+
+        if "slack_webhook_url" in params:
+            scan["slack_webhook_url"] = params["slack_webhook_url"]
 
         with db.database.atomic():
 
@@ -140,6 +144,7 @@ class ScanSchedule(Resource):
                     "target": scan["target"],
                     "start_at": params["start_at"],
                     "end_at": params["end_at"],
+                    "slack_webhook_url": scan["slack_webhook_url"],
                 }
             )
 

@@ -36,6 +36,10 @@ class Validators:
         else:
             raise ValidationError(ErrorReasonEnum.target_is_not_fqdn_or_ipv4.name)
 
+    def validate_slack_url(value):
+        if not Utils.is_slack_url(value):
+            raise ValidationError("Given Slack URL is invalid.")
+
 
 class ErrorReasonEnum(IntFlag):
     audit_id_not_found = 0
@@ -102,6 +106,12 @@ class AuditUpdateSchema(marshmallow.Schema):
     ip_restriction = marshmallow.Boolean(required=False)
     password_protection = marshmallow.Boolean(required=False)
     rejected_reason = marshmallow.String(required=False, validate=[validate.Length(min=0, max=128)])
+    slack_default_webhook_url = marshmallow.String(required=False)
+
+    @validates("slack_default_webhook_url")
+    def is_slack_url(self, value):
+        if value:
+            Validators.validate_slack_url(value)
 
 
 class ScanInputSchema(marshmallow.Schema):
@@ -121,10 +131,16 @@ class ScanUpdateSchema(marshmallow.Schema):
     comment = marshmallow.String(
         required=True, validate=[validate.Length(min=0, max=SCAN_MAX_COMMENT_LENGTH)]
     )
+    slack_webhook_url = marshmallow.String(required=False)
 
     @validates("target")
     def validate_target(self, value):
         Validators.validate_target(value)
+
+    @validates("slack_webhook_url")
+    def is_slack_url(self, value):
+        if value:
+            Validators.validate_slack_url(value)
 
     @validates_schema
     def validate_schedule(self, value):

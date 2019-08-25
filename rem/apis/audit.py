@@ -1,5 +1,4 @@
 import csv
-import re
 import secrets
 import tempfile
 import uuid
@@ -52,6 +51,7 @@ AuditOutputModel = api.model(
         "rejected_reason": fields.String(required=True),
         "ip_restriction": fields.Boolean(required=True),
         "password_protection": fields.Boolean(required=True),
+        "slack_integration": fields.Boolean(required=True),
         "created_at": fields.DateTime(required=True),
         "updated_at": fields.DateTime(required=True),
         "contacts": fields.List(fields.Nested(ContactModel), required=True),
@@ -225,6 +225,7 @@ class AuditItem(AuditResource):
             "ip_restriction": fields.Boolean(),
             "password_protection": fields.Boolean(),
             "password": fields.String(),
+            "slack_default_webhook_url": fields.String(required=False),
         },
     )
 
@@ -232,7 +233,8 @@ class AuditItem(AuditResource):
     @Authorizer.token_required
     def get(self, audit_uuid):
         """Get the specified audit"""
-        return AuditResource.get_by_uuid(audit_uuid, withContacts=True, withScans=True)
+        audit = AuditResource.get_by_uuid(audit_uuid, withContacts=True, withScans=True)
+        return audit
 
     @api.expect(AuditPatchInputModel)
     @api.marshal_with(AuditOutputModel)
@@ -243,7 +245,15 @@ class AuditItem(AuditResource):
         audit = AuditResource.get_by_uuid(audit_uuid, withContacts=False, withScans=False)
 
         schema = AuditUpdateSchema(
-            only=["name", "description", "contacts", "password", "ip_restriction", "password_protection"]
+            only=[
+                "name",
+                "description",
+                "contacts",
+                "password",
+                "ip_restriction",
+                "password_protection",
+                "slack_default_webhook_url",
+            ]
         )
         params, errors = schema.load(request.json)
         if errors:
@@ -410,6 +420,9 @@ class AuditDownload(AuditResource):
         """Download the specified audit result"""
         audit_query = AuditTable.select().where(AuditTable.uuid == audit_uuid)
 
+        audit = audit_query.dicts()[0]
+        output = audit["name"] + "\n" + audit["description"] + "\n\n"
+
         scan_ids = []
         for scan in audit_query[0].scans.dicts():
             if scan["processed"] is True:
@@ -427,14 +440,11 @@ class AuditDownload(AuditResource):
             writer = csv.DictWriter(f, AuditDownload.AUDIT_CSV_COLUMNS, extrasaction="ignore")
             writer.writeheader()
             for result in results.dicts():
-                description = re.sub("\n{2,}", "\n", result["description"])
-                description = re.sub(r"^(\w+)=", r"\1\n", description)
-                description = re.sub(r"\|(\w+)=", r"\n\n\1\n", description)
-                result["description"] = description
+                result["description"] = Utils.format_openvas_description(result["description"])
                 writer.writerow(result)
             f.flush()
             f.seek(0)
-            output = f.read()
+            output += f.read()
 
         headers = {"Content-Type": "text/csv", "Content-Disposition": "attachment"}
         return Response(response=output, status=200, headers=headers)
