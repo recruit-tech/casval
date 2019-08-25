@@ -14,11 +14,20 @@ class AuditResource(Resource):
         super().__init__(*args, **kwargs)
 
     @staticmethod
+    def get_by_id(audit_id):
+        try:
+            audit_query = AuditTable.select().where(AuditTable.id == audit_id)
+            return audit_query.dicts()[0]
+        except:
+            abort(404, "Not Found")
+
+    @staticmethod
     def get_by_uuid(audit_uuid, withContacts=False, withScans=False):
         audit_query = AuditTable.select().where(AuditTable.uuid == audit_uuid)
 
         try:
             audit = audit_query.dicts()[0]
+            audit["slack_integration"] = bool(len(audit["slack_default_webhook_url"]) > 0)
         except:
             abort(404, "Not Found")
 

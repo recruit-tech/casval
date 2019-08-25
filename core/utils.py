@@ -7,6 +7,7 @@ import socket
 from datetime import datetime
 from functools import wraps
 from time import time
+from urllib.parse import urlparse
 
 import validators
 from flask import current_app as app
@@ -14,6 +15,7 @@ from flask import current_app as app
 PASSWORD_SALT = os.getenv("PASSWORD_SALT", "password-salt")
 PASSWORD_HASH_ALG = "sha256"
 PASSWORD_ITERATION = 1000
+SLACK_DOMAIN = "slack.com"
 
 
 class Utils:
@@ -78,8 +80,23 @@ class Utils:
             return False
 
     @staticmethod
+    def is_slack_url(value):
+        try:
+            url = urlparse(value)
+            return url.hostname.endswith(SLACK_DOMAIN)
+        except Exception:
+            return False
+
+    @staticmethod
     def get_default_datetime():
         return datetime(1, 1, 1)
+
+    @staticmethod
+    def format_openvas_description(value):
+        desc = re.sub("\n{2,}", "\n", value)
+        desc = re.sub(r"^(\w+)=", r"\1\n", desc)
+        desc = re.sub(r"\|(\w+)=", r"\n\n\1\n", desc)
+        return desc
 
 
 def timing(f):
