@@ -402,7 +402,7 @@ def report_parser(path_or_file, ignore_log_info=True):
             # --------------------------------------------------------------------------
             else:
                 # Unrecognised tag
-                logging.warning("%s tag unrecognised" % l_tag)
+                logging.debug("%s tag unrecognised" % l_tag)
 
         # Add to the return values
         m_return_append(l_partial_result)

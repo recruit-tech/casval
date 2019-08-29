@@ -78,6 +78,10 @@ class AuditTokenInputSchema(marshmallow.Schema):
     password = marshmallow.String(required=False, missing="")
 
 
+class AuditDownloadInputSchema(marshmallow.Schema):
+    tz_offset = marshmallow.Integer(required=False, validate=[validate.Range(min=-1440, max=1440)], missing=0)
+
+
 class ContactSchema(marshmallow.Schema):
 
     SEPARATER_NAME_EMAIL = ":"

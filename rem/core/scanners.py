@@ -6,15 +6,18 @@ from xml.etree import ElementTree
 from flask import current_app as app
 
 from core.deployer import DeployerStatus
+from openvas_lib import ServerError
 from openvas_lib import VulnscanManager
 from openvas_lib import report_parser_from_text
 
-if len(os.getenv("CONFIG_ENV_FILE_PATH", "")) > 0:
-    # for production environment
-    from core.deployer import KubernetesDeployer as Deployer
-else:
-    # for development environment
+from .utils import Utils
+
+if Utils.is_local():
+    # For local environment
     from core.deployer import LocalDeployer as Deployer
+else:
+    # For google cloud platform environment
+    from core.deployer import KubernetesDeployer as Deployer
 
 
 class ScanStatus(Enum):
@@ -50,7 +53,7 @@ class OpenVASScanner:
 
     def launch_scan(self, target):
         try:
-            app.logger.info("[Scanner] Trying to launch new scan session...")
+            app.logger.info("Scanner trying to launch new scan session...")
 
             ov_scan_id, ov_target_id = self.conn.launch_scan(
                 target=target, profile=self.profile, alive_test=self.alive_test
@@ -68,18 +71,18 @@ class OpenVASScanner:
                 },
             }
 
-            app.logger.info("[Scanner] Launched, session={}".format(session))
+            app.logger.info("Scanner launched, session={}".format(session))
             return session
 
         except Exception as error:
-            app.logger.error(error)
+            app.logger.exception("Exception, error={}".format(error))
             return None
 
     def check_status(self):
         try:
             status = self.conn.get_scan_status(self.session["blob"]["openvas_scan_id"])
 
-            app.logger.info("[Scanner] current status={}, session={}".format(status, self.session))
+            app.logger.info("Scanner current status={}, session={}".format(status, self.session))
 
             # https://github.com/greenbone/gvmd/blob/577f1b463f5861794bb97066dd0c9c4ab6c223df/src/manage.c#L1482
             # const char*
@@ -116,8 +119,10 @@ class OpenVASScanner:
                 return ScanStatus.STOPPED
             else:
                 return ScanStatus.FAILED
+        except ServerError:
+            raise ScannerException("Scan server error")
         except Exception as error:
-            app.logger.error(error)
+            app.logger.exception("Exception, error={}".format(error))
             return ScanStatus.RUNNING
 
     def create(self):
@@ -144,44 +149,44 @@ class OpenVASScanner:
         return session
 
     def delete(self):
-        deployer = Deployer()
-        deployer.delete(self.deployer_id)
-
-        self.conn.delete_scan(self.session["blob"]["openvas_scan_id"])
-        self.conn.delete_target(self.session["blob"]["openvas_target_id"])
+        if Utils.is_local():
+            self.conn.delete_scan(self.session["blob"]["openvas_scan_id"])
+            self.conn.delete_target(self.session["blob"]["openvas_target_id"])
+        else:
+            Deployer().delete(self.deployer_id)
 
     def delete_scan(self):
         try:
-            app.logger.info("[Scanner] Trying to delete scan session...")
+            app.logger.info("Scanner trying to delete scan session...")
 
             self.conn.delete_scan(self.session["blob"]["openvas_scan_id"])
             self.conn.delete_target(self.session["blob"]["openvas_target_id"])
 
-            app.logger.info("[Scanner] Deleted.")
+            app.logger.info("Scanner deleted.")
             return True
         except Exception as error:
-            app.logger.error(error)
+            app.logger.exception("Exception, error={}".format(error))
             return False
 
     def get_report(self):
         try:
-            app.logger.info("[Scanner] Trying to get report...")
+            app.logger.info("Scanner trying to get report...")
 
             ov_report_id = self.conn.get_report_id(self.session["blob"]["openvas_scan_id"])
 
-            app.logger.info("[Scanner] Found report_id={}".format(ov_report_id))
+            app.logger.info("Scanner found report_id={}".format(ov_report_id))
 
             report_xml = self.conn.get_report_xml(ov_report_id)
             report_txt = ElementTree.tostring(report_xml, encoding="unicode", method="xml")
-            app.logger.info("[Scanner] Report downloaded, {} characters.".format(len(report_txt)))
+            app.logger.info("Scanner report downloaded, {} characters.".format(len(report_txt)))
             self.conn.delete_report(ov_report_id)
             return report_txt
         except Exception as error:
-            app.logger.error(error)
+            app.logger.exception("Exception, error={}".format(error))
             return None
 
     def _connect(self):
-        app.logger.info("[Scanner] Trying to connect to {}:{} ...".format(self.host, self.port))
+        app.logger.info("Scanner trying to connect to {}:{} ...".format(self.host, self.port))
 
         return VulnscanManager(self.host, self.user, self.password, self.port, self.DEFAULT_TIMEOUT)
 
@@ -192,7 +197,7 @@ class OpenVASScanner:
     @classmethod
     def parse_report(cls, report_txt):
         try:
-            app.logger.info("[Scanner] Trying to parse report...")
+            app.logger.info("Scanner trying to parse report...")
             parse_records = report_parser_from_text(report_txt, ignore_log_info=False)
 
             vulns = []
@@ -219,5 +224,9 @@ class OpenVASScanner:
 
             return {"results": results, "vulns": vulns}
         except Exception as error:
-            app.logger.error(error)
+            app.logger.exception("Exception, error={}".format(error))
             return None
+
+
+class ScannerException(Exception):
+    pass
