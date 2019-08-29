@@ -39,7 +39,7 @@
       "scheduled": "Scan the target between {start} - {end}.",
       "source-ip-notification": "The audit attempts will be coming from {sourceIp}.",
       "scan-started": "The scan started at {startedAt}.",
-      "scan-ended": "The scan ended at {endedAt}.",
+      "scan-ended": "The scan ended at {endedAt}, {elapsedMinutes} minutes elapsed for scan.",
       "cancel": "Cancel",
       "back": "Back",
       "error-deletion": "Failed to delete the scan session",

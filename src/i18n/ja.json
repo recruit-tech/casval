@@ -39,7 +39,7 @@
       "scheduled": "{start} - {end}の間に検査します。",
       "source-ip-notification": "検査元のIPアドレスは「{sourceIp}」です。",
       "scan-started": "{startedAt}にスキャンを開始しました。",
-      "scan-ended": "{endedAt}にスキャンを完了しました。",
+      "scan-ended": "{endedAt}にスキャンを完了しました（検査時間 {elapsedMinutes}分）。",
       "cancel": "キャンセル",
       "back": "戻る",
       "error-deletion": "スケジュールの削除に失敗しました",
