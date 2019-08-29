@@ -106,12 +106,16 @@ export default {
       return this.scan.results.some(result => result.fix_required === 'UNDEFINED');
     },
     scanEndedAt: function scanEndedAt() {
+      const startedAt = this.getUtcTime(this.scan.started_at);
       let endedAt = this.getUtcTime(this.scan.ended_at);
+
       if (endedAt.year() < 2000) {
         return '';
       }
+
+      const elapsedMinutes = endedAt.diff(startedAt, 'minutes');
       endedAt = endedAt.format(this.$i18n.t('home.scan.scantime'));
-      return this.$i18n.t('home.scan.scan-ended', { endedAt });
+      return this.$i18n.t('home.scan.scan-ended', { endedAt, elapsedMinutes });
     }
   },
   mounted() {

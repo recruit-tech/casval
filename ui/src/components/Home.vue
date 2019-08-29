@@ -129,9 +129,14 @@ export default {
     };
   },
   methods: {
+    getTimezoneOffset: function getTimezoneOffset() {
+      const date = new Date();
+      return -1 * date.getTimezoneOffset();
+    },
     downloadAudit: async function downloadAudit() {
       try {
-        const res = await this.auditApiClient.get('/download/');
+        const offset = this.getTimezoneOffset();
+        const res = await this.auditApiClient.get(`/download/?tz_offset=${offset}`);
         switch (res.status) {
           case 200: {
             const csv = res.data;
