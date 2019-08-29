@@ -19,6 +19,7 @@ pytz = "*"
 requests = "*"
 google-cloud-storage = "*"
 kubernetes = "*"
+marshmallow = "==2.20.2"
 
 [dev-packages]
 isort = "*"

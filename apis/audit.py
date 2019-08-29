@@ -2,6 +2,7 @@ import csv
 import secrets
 import tempfile
 import uuid
+from datetime import timedelta
 
 from flask import Response
 from flask import abort
@@ -13,6 +14,7 @@ from flask_restplus import inputs
 from flask_restplus import reqparse
 from peewee import fn
 
+from core import AuditDownloadInputSchema
 from core import AuditInputSchema
 from core import AuditListInputSchema
 from core import AuditResource
@@ -418,6 +420,12 @@ class AuditDownload(AuditResource):
     @Authorizer.token_required
     def get(self, audit_uuid):
         """Download the specified audit result"""
+
+        schema = AuditDownloadInputSchema()
+        params, errors = schema.load(request.args)
+        if errors:
+            abort(400, errors)
+
         audit_query = AuditTable.select().where(AuditTable.uuid == audit_uuid)
 
         audit = audit_query.dicts()[0]
@@ -440,6 +448,8 @@ class AuditDownload(AuditResource):
             writer = csv.DictWriter(f, AuditDownload.AUDIT_CSV_COLUMNS, extrasaction="ignore")
             writer.writeheader()
             for result in results.dicts():
+                result["started_at"] = result["started_at"] + timedelta(minutes=params["tz_offset"])
+                result["ended_at"] = result["ended_at"] + timedelta(minutes=params["tz_offset"])
                 result["description"] = Utils.format_openvas_description(result["description"])
                 writer.writerow(result)
             f.flush()

@@ -20,7 +20,7 @@ class LocalFileStorage:
                 body = file.read()
             return body
         except Exception as e:
-            app.logger.error(e)
+            app.logger.warn(e)
             return None
 
     def store(self, key, body):
@@ -29,7 +29,7 @@ class LocalFileStorage:
             with open(filepath, "w", encoding="utf8") as file:
                 file.write(body)
         except Exception as e:
-            app.logger.error(e)
+            app.logger.warn(e)
             return False
 
         return True
@@ -46,9 +46,11 @@ class CloudFileStorage:
     def load(self, key):
         try:
             blob = self.bucket.get_blob(self.RESULT_DIR_NAME + key)
+            if blob is None:
+                return None
             return blob.download_as_string().decode("utf-8")
         except Exception as e:
-            app.logger.error(e)
+            app.logger.warn(e)
             return None
 
     def store(self, key, body):
@@ -56,7 +58,7 @@ class CloudFileStorage:
             blob = self.bucket.blob(self.RESULT_DIR_NAME + key)
             blob.upload_from_string(body)
         except Exception as e:
-            app.logger.error(e)
+            app.logger.warn(e)
             return False
 
         return True

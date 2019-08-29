@@ -1,5 +1,7 @@
+import json
 import logging
 import os
+import traceback
 
 from flask import Flask
 from flask_cors import CORS
@@ -17,29 +19,55 @@ from core import db
 from core import jwt
 from core import marshmallow
 
+
+class FormatterJSON(logging.Formatter):
+    def format(self, record):
+        record.message = record.getMessage()
+        if self.usesTime():
+            record.asctime = self.formatTime(record, self.datefmt)
+        log = {
+            "severity": record.levelname,
+            "message": record.message,
+            "module": record.module,
+            "filename": record.filename,
+            "funcName": record.funcName,
+            "levelno": record.levelno,
+            "lineno": record.lineno,
+            "traceback": {},
+        }
+        if record.exc_info:
+            exception_data = traceback.format_exc().splitlines()
+            log["traceback"] = exception_data
+
+        return json.dumps(log, ensure_ascii=False)
+
+
+formatter = FormatterJSON(
+    "[%(levelname)s]\t%(asctime)s.%(msecs)dZ\t%(levelno)s\t%(message)s\n", "%Y-%m-%dT%H:%M:%S"
+)
+
+logging.basicConfig(level=logging.INFO)
+logging.getLogger().handlers[0].setFormatter(formatter)
+
 app = Flask(__name__)
 
-logger = logging.getLogger("peewee")
-logger.addHandler(logging.StreamHandler())
-logger.setLevel(logging.WARNING)
-
-if len(os.getenv("CONFIG_ENV_FILE_PATH", "")) > 0:
-    # For production environment
-    Utils.load_env_from_config_file(os.environ["CONFIG_ENV_FILE_PATH"])
-    app.config["DATABASE"] = MySQLDatabase(
-        os.environ["DB_NAME"],
-        unix_socket=os.path.join("/cloudsql", os.environ["DB_INSTANCE_NAME"]),
-        user=os.environ["DB_USER"],
-        password=os.environ["DB_PASSWORD"],
-    )
-else:
-    # For development environment
+if Utils.is_local():
+    # For local environment
     app.config["DATABASE"] = MySQLDatabase(
         os.getenv("DB_NAME", "casval"),
         user=os.getenv("DB_USER", "root"),
         password=os.getenv("DB_PASSWORD", "Passw0rd!"),
         host=os.getenv("DB_ENDPOINT", "127.0.0.1"),
         port=int(os.getenv("DB_PORT", "3306")),
+    )
+else:
+    # For google cloud platform environment
+    Utils.load_env_from_config_file(os.environ["CONFIG_ENV_FILE_PATH"])
+    app.config["DATABASE"] = MySQLDatabase(
+        os.environ["DB_NAME"],
+        unix_socket=os.path.join("/cloudsql", os.environ["DB_INSTANCE_NAME"]),
+        user=os.environ["DB_USER"],
+        password=os.environ["DB_PASSWORD"],
     )
 
 app.config["ADMIN_PASSWORD"] = os.getenv("ADMIN_PASSWORD", "admin-password")

@@ -1,3 +1,5 @@
+import urllib3
+
 from .authorizers import Authorizer  # noqa
 from .authorizers import jwt  # noqa
 from .models import AuditTable  # noqa
@@ -16,6 +18,7 @@ from .tasks import PendingTask  # noqa
 from .tasks import RunningTask  # noqa
 from .tasks import StoppedTask  # noqa
 from .utils import Utils  # noqa
+from .validators import AuditDownloadInputSchema  # noqa
 from .validators import AuditInputSchema  # noqa
 from .validators import AuditListInputSchema  # noqa
 from .validators import AuditTokenInputSchema  # noqa
@@ -27,3 +30,5 @@ from .validators import ScanUpdateSchema  # noqa
 from .validators import VulnListInputSchema  # noqa
 from .validators import VulnUpdateSchema  # noqa
 from .validators import marshmallow  # noqa
+
+urllib3.disable_warnings()

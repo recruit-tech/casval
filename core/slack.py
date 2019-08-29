@@ -34,7 +34,11 @@ class SlackIntegrator:
             for result in task["results"]:
                 fix_required[result["fix_required"]] += 1
 
-            payload["text"] = "Scan for *{target}* completed.".format(target=task["target"])
+            elapsed_time = task["ended_at"] - task["started_at"]
+            elapsed_minutes = (elapsed_time.days * 24 * 60) + (elapsed_time.seconds / 60)
+            payload["text"] = "Scan for *{target}* completed ({elapsed} min).".format(
+                target=task["target"], elapsed=int(elapsed_minutes)
+            )
 
             attachments = []
             if fix_required["REQUIRED"] > 0:
