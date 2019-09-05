@@ -41,12 +41,7 @@ class LocalDeployer(Deployer):
         return
 
     def create(self, uuid=None, container_image=None, container_port=None):
-        return {
-            "status": DeployerStatus.RUNNING,
-            "ip": "127.0.0.1",
-            "port": container_port,
-            "uuid": "Nothing",
-        }
+        return {"status": DeploymentStatus.RUNNING, "ip": "127.0.0.1", "port": container_port, "uuid": None}
 
     def delete(self, uuid):
         return
@@ -99,7 +94,7 @@ class KubernetesDeployer(Deployer):
 
         try:
             self.info = self.get_info()
-            if self.info["status"] != DeployerStatus.NOT_EXIST:
+            if self.info["status"] != DeploymentStatus.NOT_EXIST:
                 return self.info
 
             self._create_deployment()
@@ -114,14 +109,14 @@ class KubernetesDeployer(Deployer):
         except Exception as e:
             app.logger.exception(e)
 
-        return self._get_info(DeployerStatus.FAILED)
+        return self._get_info(DeploymentStatus.FAILED)
 
     def delete(self, uuid: str) -> None:
         self.uuid = uuid
 
         try:
             self.info = self.get_info()
-            if self.info["status"] == DeployerStatus.NOT_EXIST:
+            if self.info["status"] == DeploymentStatus.NOT_EXIST:
                 raise ResourceNotFoundException
 
             self._delete_deployment()
@@ -147,20 +142,20 @@ class KubernetesDeployer(Deployer):
                 self.ip = service.status.load_balancer.ingress[0].ip
 
             if available_replicas and self.ip and self.port:
-                return self._get_info(DeployerStatus.RUNNING)
+                return self._get_info(DeploymentStatus.RUNNING)
 
-            return self._get_info(DeployerStatus.WAITING)
+            return self._get_info(DeploymentStatus.WAITING)
 
         except ApiException as e:
             if e.status == 404:
-                return self._get_info(DeployerStatus.NOT_EXIST)
+                return self._get_info(DeploymentStatus.NOT_EXIST)
 
             app.logger.exception(e)
 
         except Exception as e:
             app.logger.exception(e)
 
-        return self._get_info(DeployerStatus.FAILED)
+        return self._get_info(DeploymentStatus.FAILED)
 
     def _uuid(self):
         return "pre" + str(uuid.uuid4())
@@ -325,7 +320,7 @@ class KubernetesDeployer(Deployer):
         self.__namespace = namespace
 
 
-class DeployerStatus(Enum):
+class DeploymentStatus(Enum):
     RUNNING = auto()
     WAITING = auto()
     FAILED = auto()

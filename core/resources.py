@@ -75,7 +75,6 @@ class ScanResource(Resource):
     @staticmethod
     def get_by_uuid(scan_uuid, withResults=False):
         scan_query = ScanTable.select().where(ScanTable.uuid == scan_uuid)
-        scan = scan_query.dicts()[0]
 
         try:
             scan = scan_query.dicts()[0]

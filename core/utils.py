@@ -97,5 +97,5 @@ class Utils:
         return desc
 
     @staticmethod
-    def is_local():
-        return not bool(os.getenv("CONFIG_ENV_FILE_PATH", ""))
+    def is_gcp():
+        return bool(os.getenv("CONFIG_ENV_FILE_PATH", ""))

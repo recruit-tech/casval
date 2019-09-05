@@ -6,9 +6,12 @@
 ### Production (on Google App Engine)
 
 ```
+cd example/gke
 terraform init
 terraform apply
 pipenv run config
+
+# Move config.env to casval/rem
 pipenv run freeze
 pipenv run deploy
 ```

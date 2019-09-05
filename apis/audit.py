@@ -99,7 +99,7 @@ class AuditList(AuditResource):
         audit_query = AuditTable.select(
             AuditTable,
             fn.GROUP_CONCAT(
-                ContactTable.name,
+                ContactTable.name.distinct(),
                 ContactSchema.SEPARATER_NAME_EMAIL,
                 ContactTable.email,
                 python_value=(
