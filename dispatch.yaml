@@ -9,6 +9,8 @@ dispatch:
     service: rem
   - url: "*/vuln/*"
     service: rem
+  - url: "*/monitor/*"
+    service: rem
 
   - url: "*/admin/*"
     service: admin-ui
