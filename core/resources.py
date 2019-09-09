@@ -14,16 +14,15 @@ class AuditResource(Resource):
         super().__init__(*args, **kwargs)
 
     @staticmethod
-    def get_by_id(audit_id):
-        try:
-            audit_query = AuditTable.select().where(AuditTable.id == audit_id)
-            return audit_query.dicts()[0]
-        except:
-            abort(404, "Not Found")
+    def get_by_id(audit_id=None, audit_uuid=None, withContacts=False, withScans=False):
+        audit_query = AuditTable.select()
 
-    @staticmethod
-    def get_by_uuid(audit_uuid, withContacts=False, withScans=False):
-        audit_query = AuditTable.select().where(AuditTable.uuid == audit_uuid)
+        if audit_id is not None:
+            audit_query = audit_query.where(AuditTable.id == audit_id)
+        elif audit_uuid is not None:
+            audit_query = audit_query.where(AuditTable.uuid == audit_uuid)
+        else:
+            abort(404, "Not Found")
 
         try:
             audit = audit_query.dicts()[0]
@@ -45,7 +44,7 @@ class AuditResource(Resource):
 
     @staticmethod
     def get_audit_id_by_uuid(audit_uuid):
-        audit = AuditResource.get_by_uuid(audit_uuid)
+        audit = AuditResource.get_by_id(audit_uuid=audit_uuid)
         return audit["id"]
 
 
@@ -64,7 +63,7 @@ class ScanResource(Resource):
             else:
                 abort(400, "Requested endpoint has no `audit_uuid` or `scan_uuid`")
 
-            audit = AuditResource.get_by_uuid(audit_uuid)
+            audit = AuditResource.get_by_id(audit_uuid=audit_uuid)
             if audit["submitted"] or audit["approved"]:
                 abort(400, "Audit has been submitted or approved")
             else:

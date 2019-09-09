@@ -139,5 +139,8 @@ crash.log
 # CASVAL environment config file is generated automatically by `pipenv run config`.
 config.env
 
-# CASVAL report storage for local development environment
+# CASVAL report storage for local development environment.
 results/
+
+# CASVAL custom monitoring endpoint.
+apis/monitor.py

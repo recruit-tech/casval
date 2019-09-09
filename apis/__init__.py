@@ -22,3 +22,10 @@ api.add_namespace(scan, path="/scan")
 api.add_namespace(auth, path="/auth")
 api.add_namespace(vuln, path="/vuln")
 api.add_namespace(handler, path="/handler")
+
+try:
+    from .monitor import api as monitor
+
+    api.add_namespace(monitor, path="/monitor")
+except ModuleNotFoundError:
+    pass

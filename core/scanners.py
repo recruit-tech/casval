@@ -114,7 +114,7 @@ class OpenVASScanner:
             else:
                 return ScanStatus.FAILED
         except Exception as error:
-            app.logger.exception("Scan exception, error={}".format(error))
+            app.logger.exception("Scan status check error, reason={}".format(error))
             return ScanStatus.RUNNING
 
     def get_report(self):

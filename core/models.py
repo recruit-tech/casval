@@ -99,7 +99,9 @@ class ResultTable(db.Model):
     class Meta:
         db_table = "result"
 
-    scan_id = ForeignKeyField(ScanTable, backref="results", on_delete="CASCADE", on_update="CASCADE")
+    scan_id = ForeignKeyField(
+        ScanTable, backref="results", null=True, on_delete="SET NULL", on_update="CASCADE"
+    )
     name = CharField(null=True)
     host = CharField(null=True)
     port = CharField(null=True)
