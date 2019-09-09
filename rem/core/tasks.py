@@ -112,9 +112,19 @@ class BaseTask:
         return title, attachments
 
     def _notify_to_slack(self, task, next_progress):
-
         title, attachments = self._get_slack_message(task, next_progress)
         if title:
+            app.logger.info(
+                "New message, payload={}".format(
+                    {
+                        "title": title,
+                        "attachments": attachments,
+                        "audit_id": task["audit_id"],
+                        "scan_id": task["scan_id"],
+                        "target": task["target"],
+                    }
+                )
+            )
             webhook_url = task["slack_webhook_url"]
             if not webhook_url:
                 audit = AuditResource.get_by_id(task["audit_id"])
@@ -292,7 +302,7 @@ class StoppedTask(BaseTask):
             self._reset_scan_schedule(task)
             for vuln in report["vulns"]:
                 VulnTable.insert(vuln).on_conflict_ignore().execute()
-            ResultTable.delete().where(ResultTable.scan_id == task["scan_id"]).execute()
+            ResultTable.update(scan_id=None).where(ResultTable.scan_id == task["scan_id"]).execute()
             results = report["results"]
             for result in results:
                 result["scan_id"] = task["scan_id"]

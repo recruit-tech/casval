@@ -158,7 +158,7 @@ class AuditList(AuditResource):
 
             ContactTable.insert_many(params["contacts"]).execute()
 
-        return AuditResource.get_by_uuid(audit.uuid, withContacts=True, withScans=True)
+        return AuditResource.get_by_id(audit_uuid=audit.uuid, withContacts=True, withScans=True)
 
 
 @api.route("/<string:audit_uuid>/tokens/")
@@ -176,7 +176,7 @@ class AuditToken(AuditResource):
     @api.response(404, "Not Found")
     def post(self, audit_uuid):
         """Publish an API token for the specified audit"""
-        audit = AuditResource.get_by_uuid(audit_uuid, withContacts=False, withScans=False)
+        audit = AuditResource.get_by_id(audit_uuid=audit_uuid, withContacts=False, withScans=False)
 
         if audit["ip_restriction"] == True:
             if Utils.is_source_ip_permitted(request.access_route[0]) == False:
@@ -235,7 +235,7 @@ class AuditItem(AuditResource):
     @Authorizer.token_required
     def get(self, audit_uuid):
         """Get the specified audit"""
-        audit = AuditResource.get_by_uuid(audit_uuid, withContacts=True, withScans=True)
+        audit = AuditResource.get_by_id(audit_uuid=audit_uuid, withContacts=True, withScans=True)
         return audit
 
     @api.expect(AuditPatchInputModel)
@@ -244,7 +244,7 @@ class AuditItem(AuditResource):
     @Authorizer.token_required
     def patch(self, audit_uuid):
         """Update the specified audit"""
-        audit = AuditResource.get_by_uuid(audit_uuid, withContacts=False, withScans=False)
+        audit = AuditResource.get_by_id(audit_uuid=audit_uuid, withContacts=False, withScans=False)
 
         schema = AuditUpdateSchema(
             only=[
@@ -285,7 +285,7 @@ class AuditItem(AuditResource):
                 ContactTable.delete().where(ContactTable.audit_id == audit["id"]).execute()
                 ContactTable.insert_many(contacts).execute()
 
-        return AuditResource.get_by_uuid(audit["uuid"], withContacts=True, withScans=True)
+        return AuditResource.get_by_id(audit_uuid=audit["uuid"], withContacts=True, withScans=True)
 
     @Authorizer.admin_token_required
     def delete(self, audit_uuid):
@@ -310,7 +310,7 @@ class AuditSubmission(AuditResource):
     @Authorizer.token_required
     def post(self, audit_uuid):
         """Submit the specified audit result"""
-        audit = AuditResource.get_by_uuid(audit_uuid, withContacts=False, withScans=False)
+        audit = AuditResource.get_by_id(audit_uuid=audit_uuid, withContacts=False, withScans=False)
 
         if audit["submitted"] == True:
             abort(400, "Already submitted")
@@ -324,14 +324,14 @@ class AuditSubmission(AuditResource):
         with db.database.atomic():
             AuditTable.update(params).where(AuditTable.id == audit["id"]).execute()
 
-        return AuditResource.get_by_uuid(audit["uuid"], withContacts=True, withScans=True)
+        return AuditResource.get_by_id(audit_uuid=audit["uuid"], withContacts=True, withScans=True)
 
     @api.expect(AuditWithdrawalInputModel)
     @api.marshal_with(AuditOutputModel)
     @Authorizer.token_required
     def delete(self, audit_uuid):
         """Withdraw the submission of the specified audit result"""
-        audit = AuditResource.get_by_uuid(audit_uuid, withContacts=False, withScans=False)
+        audit = AuditResource.get_by_id(audit_uuid=audit_uuid, withContacts=False, withScans=False)
 
         if audit["submitted"] == False:
             abort(400, "Not submitted yet")
@@ -349,7 +349,7 @@ class AuditSubmission(AuditResource):
         with db.database.atomic():
             AuditTable.update(params).where(AuditTable.id == audit["id"]).execute()
 
-        return AuditResource.get_by_uuid(audit["uuid"], withContacts=True, withScans=True)
+        return AuditResource.get_by_id(audit_uuid=audit["uuid"], withContacts=True, withScans=True)
 
 
 @api.route("/<string:audit_uuid>/approve/")
@@ -362,7 +362,7 @@ class AuditApproval(AuditResource):
     @Authorizer.admin_token_required
     def post(self, audit_uuid):
         """Approve the specified audit submission"""
-        audit = AuditResource.get_by_uuid(audit_uuid, withContacts=False, withScans=False)
+        audit = AuditResource.get_by_id(audit_uuid=audit_uuid, withContacts=False, withScans=False)
 
         if audit["approved"] == True:
             abort(400, "Already approved")
@@ -373,13 +373,13 @@ class AuditApproval(AuditResource):
         with db.database.atomic():
             AuditTable.update(params).where(AuditTable.id == audit["id"]).execute()
 
-        return AuditResource.get_by_uuid(audit["uuid"], withContacts=True, withScans=True)
+        return AuditResource.get_by_id(audit_uuid=audit["uuid"], withContacts=True, withScans=True)
 
     @api.marshal_with(AuditOutputModel)
     @Authorizer.admin_token_required
     def delete(self, audit_uuid):
         """Withdraw the approval of the specified audit submission"""
-        audit = AuditResource.get_by_uuid(audit_uuid, withContacts=False, withScans=False)
+        audit = AuditResource.get_by_id(audit_uuid=audit_uuid, withContacts=False, withScans=False)
 
         if audit["approved"] == False:
             abort(400, "Not approved yet")
@@ -390,7 +390,7 @@ class AuditApproval(AuditResource):
         with db.database.atomic():
             AuditTable.update(params).where(AuditTable.id == audit["id"]).execute()
 
-        return AuditResource.get_by_uuid(audit["uuid"], withContacts=True, withScans=True)
+        return AuditResource.get_by_id(audit_uuid=audit["uuid"], withContacts=True, withScans=True)
 
 
 @api.route("/<string:audit_uuid>/download/")
