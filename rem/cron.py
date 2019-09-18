@@ -1,16 +1,15 @@
 import concurrent.futures
-import os
 import time
 
 import requests
 
-REQUEST_SCHEMA = "http://"
+REM_SERVER_HOST = "http://127.0.0.1:5000/"
 
-PENDING_TASK_ENDPOINT = "/handler/pending/"
-RUNNING_TASK_ENDPOINT = "/handler/running/"
-STOPPED_TASK_ENDPOINT = "/handler/stopped/"
-FAILED_TASK_ENDPOINT = "/handler/failed/"
-DELETED_TASK_ENDPOINT = "/handler/deleted/"
+PENDING_TASK_ENDPOINT = "handler/pending/"
+RUNNING_TASK_ENDPOINT = "handler/running/"
+STOPPED_TASK_ENDPOINT = "handler/stopped/"
+FAILED_TASK_ENDPOINT = "handler/failed/"
+DELETED_TASK_ENDPOINT = "handler/deleted/"
 
 PENDING_TASK_INTERVAL = 1 * 60  # 1 minute
 RUNNING_TASK_INTERVAL = 1 * 60  # 1 minute
@@ -51,7 +50,7 @@ def handleDeletedTask():
 
 def invoke(endpoint):
     headers = {"X-AppEngine-Cron": "true"}
-    url = REQUEST_SCHEMA + os.getenv("SERVER_NAME", "127.0.0.1:5000") + endpoint
+    url = REM_SERVER_HOST + endpoint
     return requests.get(url, headers=headers)
 
 

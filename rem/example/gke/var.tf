@@ -18,6 +18,14 @@ variable "region" {
   default = "asia-east2"
 }
 
+variable "worker_machine_type" {
+  default = "n1-standard-4"
+}
+
+variable "master_machine_type" {
+  default = "g1-small"
+}
+
 variable "project" {
   default = "{YOUR_PROJECT_NAME}"
 }

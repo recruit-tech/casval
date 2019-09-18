@@ -1,355 +1,181 @@
 import json
 import os
 import uuid
-from abc import ABCMeta
-from abc import abstractmethod
 from enum import Enum
 from enum import auto
 
 import kubernetes.client as k8s
 import requests
-from flask import current_app as app
 from kubernetes.client.rest import ApiException
 
 
-class Deployer(metaclass=ABCMeta):
-    """
-    Abstruct Deployer's class
+class DeploymentStatus(Enum):
+    NOT_EXIST = auto()
+    NOT_READY = auto()
+    RUNNING = auto()
 
-    Required create public method
-    """
 
-    @abstractmethod
-    def create(self, name: str):
+class Deployer:
+
+    UID_PREFIX = "casval-"
+
+    def __init__(self, uid):
+        self.host = None
+        self.port = None
+        self.uid = uid if uid != None else Deployer.UID_PREFIX + uuid.uuid4().hex
+        self.status = DeploymentStatus.NOT_EXIST
+
+    def create(self):
         raise NotImplementedError()
 
-    @abstractmethod
-    def delete(self, name: str):
+    def delete(self):
         raise NotImplementedError()
 
-    @abstractmethod
-    def ip(self):
-        raise NotImplementedError()
-
-    @abstractmethod
-    def port(self):
+    def is_ready(self):
         raise NotImplementedError()
 
 
 class LocalDeployer(Deployer):
-    def __ini__(self, options={}) -> None:
+    def __init__(self, uid):
+        super().__init__(uid)
+        self.host = os.getenv("OPENVAS_OMP_ENDPOINT", "127.0.0.1")
+        self.port = os.getenv("OPENVAS_OMP_PORT", 9390)
+
+    def create(self):
+        return {"status": DeploymentStatus.RUNNING, "host": self.host, "port": self.port, "uid": self.uid}
+
+    def delete(self):
         return
 
-    def create(self, uuid=None, container_image=None, container_port=None):
-        return {"status": DeploymentStatus.RUNNING, "ip": "127.0.0.1", "port": container_port, "uuid": None}
-
-    def delete(self, uuid):
-        return
-
-    @property
-    def ip(self):
-        return self.__ip
-
-    @ip.setter
-    def ip(self, ip):
-        self.__ip = ip
-
-    @property
-    def port(self):
-        return self.__port
-
-    @port.setter
-    def port(self, port):
-        self.__port = port
+    def is_ready(self):
+        return True
 
 
 class KubernetesDeployer(Deployer):
-    def __init__(self, options={}) -> None:
-        self.uuid = None
-        self.client = None
-        self.ip = None
-        self.port = 443
-        self.container_port = None
-        self.container_image = None
-        self.info = None
-        self.host = os.getenv("KUBERNETES_SERVER", "localhost")
+
+    OPENVAS_CONTAINER_IMAGE = "mikesplain/openvas:9"
+    CONTAINER_USE_CPU_LIMIT = "400m"
+    CONTAINER_USE_MEMORY_LIMIT = "2.5Gi"
+    DEFAULT_SERVICE_PORT = 443
+    GCP_METADATA_API_TOKEN_ENDPOINT = (
+        "http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token"
+    )
+
+    def __init__(self, uid):
+        super().__init__(uid)
         self.namespace = os.getenv("KUBERNETES_NAMESPACE", "default")
-
-        if options.get("kubernetes_server") is not None:
-            self.host = options["kubernetes_server"]
-
-        if options.get("namespace") is not None:
-            self.namespace = options["namespace"]
-
         self.client = self._client()
+        self.status, self.host, self.port = self._get_status()
 
-    def create(self, uuid=None, container_image=None, container_port=None):
-        if uuid == None:
-            self.uuid = self._uuid()
-        else:
-            self.uuid = uuid
-
-        self.container_image = container_image
-        self.container_port = container_port
-
-        try:
-            self.info = self.get_info()
-            if self.info["status"] != DeploymentStatus.NOT_EXIST:
-                return self.info
-
+    def create(self):
+        if self.status == DeploymentStatus.NOT_EXIST:
             self._create_deployment()
-            self._create_service()
 
-            return self.get_info()
+            try:
+                self._create_service()
+            except Exception:
+                self._delete_deployment()
+                raise
 
-        except CreateServiceException as e:
-            self._delete_deployment()
-            app.logger.exception(e)
+            self.status, self.host, self.port = self._get_status()
 
-        except Exception as e:
-            app.logger.exception(e)
+        return {"status": self.status, "host": self.host, "port": self.port, "uid": self.uid}
 
-        return self._get_info(DeploymentStatus.FAILED)
-
-    def delete(self, uuid: str) -> None:
-        self.uuid = uuid
-
-        try:
-            self.info = self.get_info()
-            if self.info["status"] == DeploymentStatus.NOT_EXIST:
-                raise ResourceNotFoundException
-
+    def delete(self):
+        if self.status != DeploymentStatus.NOT_EXIST:
             self._delete_deployment()
             self._delete_service()
 
-        except Exception as e:
-            app.logger.exception(e)
+    def is_ready(self):
+        return bool(self.host and self.port and self.status == DeploymentStatus.RUNNING)
 
-        return
-
-    def get_info(self, uuid="") -> dict:
-        if uuid != "":
-            self.uuid = uuid
+    def _get_status(self):
+        status = DeploymentStatus.NOT_READY
+        host = None
+        port = None
 
         try:
             deployment = self._read_deployment()
             available_replicas = deployment.status.available_replicas
 
             service = self._read_service()
-            self.port = service.spec.ports[0].port
-
             if service.status.load_balancer.ingress is not None:
-                self.ip = service.status.load_balancer.ingress[0].ip
+                host = service.status.load_balancer.ingress[0].ip
+                port = service.spec.ports[0].port
 
-            if available_replicas and self.ip and self.port:
-                return self._get_info(DeploymentStatus.RUNNING)
-
-            return self._get_info(DeploymentStatus.WAITING)
+            if available_replicas and host and port:
+                status = DeploymentStatus.RUNNING
 
         except ApiException as e:
             if e.status == 404:
-                return self._get_info(DeploymentStatus.NOT_EXIST)
+                status = DeploymentStatus.NOT_EXIST
+            else:
+                raise
 
-            app.logger.exception(e)
-
-        except Exception as e:
-            app.logger.exception(e)
-
-        return self._get_info(DeploymentStatus.FAILED)
-
-    def _uuid(self):
-        return "pre" + str(uuid.uuid4())
+        return status, host, port
 
     def _client(self):
-        configuration = k8s.Configuration()
-        configuration.api_key["authorization"] = "Bearer " + self._get_credential()
-        configuration.host = self.host
-        configuration.verify_ssl = False
-        return k8s.ApiClient(configuration)
+        config = k8s.Configuration()
+        config.api_key["authorization"] = "Bearer " + self._get_credential()
+        config.host = os.getenv("KUBERNETES_MASTER_SERVER", "localhost")
+        config.verify_ssl = False
+        return k8s.ApiClient(config)
 
     def _get_credential(self):
-        GOOGLE_METADATA_API = (
-            "http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token"
-        )
-
-        credential = os.getenv("KUBERNETES_CREDENTIAL")
-        if credential is None:
-            try:
-                headers = {"Metadata-Flavor": "Google"}
-                res = requests.get(GOOGLE_METADATA_API, headers=headers)
-                credential = json.loads(res.text).get("access_token", "")
-            except requests.exceptions.ConnectionError:
-                credential = ""
-            except Exception as e:
-                credential = ""
-                app.logger.exception(e)
-
-        return credential
+        headers = {"Metadata-Flavor": "Google"}
+        res = requests.get(KubernetesDeployer.GCP_METADATA_API_TOKEN_ENDPOINT, headers=headers)
+        return json.loads(res.text)["access_token"]
 
     def _create_service(self):
-        api_instance = k8s.CoreV1Api(self.client)
         service_port = k8s.V1ServicePort(
-            name=self.uuid.split("-")[0], port=self.port, target_port=self.container_port, protocol="TCP"
+            name=self.uid[-14:],
+            port=KubernetesDeployer.DEFAULT_SERVICE_PORT,
+            target_port=os.getenv("OPENVAS_OMP_PORT", 9390),
         )
         service_spec = k8s.V1ServiceSpec(
-            type="LoadBalancer", ports=[service_port], selector={"app.kubernetes.io/name": self.uuid}
+            type="LoadBalancer", ports=[service_port], selector={"app.kubernetes.io/name": self.uid}
         )
-        service_metadata = k8s.V1ObjectMeta(name=self.uuid, labels={"app.kubernetes.io/name": self.uuid})
+        service_metadata = k8s.V1ObjectMeta(name=self.uid, labels={"app.kubernetes.io/name": self.uid})
         service = k8s.V1Service(spec=service_spec, metadata=service_metadata)
-
-        try:
-            return api_instance.create_namespaced_service(self.namespace, service)
-        except Exception as e:
-            raise CreateServiceException(e)
+        return k8s.CoreV1Api(self.client).create_namespaced_service(self.namespace, service)
 
     def _create_deployment(self):
-        """
-        Deployments must toleration "Scanners" key.
-        """
-
         REPLICAS = 1
-        api_instance = k8s.AppsV1Api(self.client)
+
         container_port = k8s.V1ContainerPort(
-            name=self.uuid.split("-")[0], container_port=self.container_port, protocol="TCP"
+            name=self.uid[-14:], container_port=os.getenv("OPENVAS_OMP_PORT", 9390)
         )
-        resources = k8s.V1ResourceRequirements(limits={"cpu": "400m", "memory": "800Mi"})
+        resources = k8s.V1ResourceRequirements(
+            limits={
+                "cpu": KubernetesDeployer.CONTAINER_USE_CPU_LIMIT,
+                "memory": KubernetesDeployer.CONTAINER_USE_MEMORY_LIMIT,
+            }
+        )
         container = k8s.V1Container(
-            image=self.container_image,
-            name=self.uuid,
+            image=KubernetesDeployer.OPENVAS_CONTAINER_IMAGE,
+            name=self.uid,
             image_pull_policy="IfNotPresent",
             ports=[container_port],
             resources=resources,
         )
         toleration = k8s.V1Toleration(effect="NoSchedule", key="Scanners", operator="Exists")
-
         pod_spec = k8s.V1PodSpec(containers=[container], tolerations=[toleration])
-        pod_metadata = k8s.V1ObjectMeta(name=self.uuid, labels={"app.kubernetes.io/name": self.uuid})
-
+        pod_metadata = k8s.V1ObjectMeta(name=self.uid, labels={"app.kubernetes.io/name": self.uid})
         pod_template = k8s.V1PodTemplateSpec(spec=pod_spec, metadata=pod_metadata)
-        deployment_spec_selector = k8s.V1LabelSelector(match_labels={"app.kubernetes.io/name": self.uuid})
-        deployment_spec = k8s.V1DeploymentSpec(
-            replicas=REPLICAS, selector=deployment_spec_selector, template=pod_template
-        )
-        deployment_metadata = k8s.V1ObjectMeta(name=self.uuid, labels={"app.kubernetes.io/name": self.uuid})
+        selector = k8s.V1LabelSelector(match_labels={"app.kubernetes.io/name": self.uid})
+        deployment_spec = k8s.V1DeploymentSpec(replicas=REPLICAS, selector=selector, template=pod_template)
+        deployment_metadata = k8s.V1ObjectMeta(name=self.uid, labels={"app.kubernetes.io/name": self.uid})
         deployment = k8s.V1Deployment(spec=deployment_spec, metadata=deployment_metadata)
-
-        try:
-            return api_instance.create_namespaced_deployment(self.namespace, deployment)
-        except Exception as e:
-            raise CreateDeploymentException(e)
+        return k8s.AppsV1Api(self.client).create_namespaced_deployment(self.namespace, deployment)
 
     def _delete_service(self):
-        api_instance = k8s.CoreV1Api(self.client)
-        try:
-            return api_instance.delete_namespaced_service(self.uuid, self.namespace)
-        except Exception as e:
-            raise DeleteServiceException(e)
+        return k8s.CoreV1Api(self.client).delete_namespaced_service(self.uid, self.namespace)
 
     def _delete_deployment(self):
-        api_instance = k8s.AppsV1Api(self.client)
-        try:
-            return api_instance.delete_namespaced_deployment(self.uuid, self.namespace)
-        except Exception as e:
-            raise DeleteDeploymentException(e)
+        return k8s.AppsV1Api(self.client).delete_namespaced_deployment(self.uid, self.namespace)
 
     def _read_service(self):
-        api_instance = k8s.CoreV1Api(self.client)
-        return api_instance.read_namespaced_service(self.uuid, self.namespace)
+        return k8s.CoreV1Api(self.client).read_namespaced_service(self.uid, self.namespace)
 
     def _read_deployment(self):
-        api_instance = k8s.AppsV1Api(self.client)
-        return api_instance.read_namespaced_deployment(self.uuid, self.namespace)
-
-    def _get_info(self, status):
-        return {"status": status, "ip": self.ip, "port": self.port, "uuid": self.uuid}
-
-    @property
-    def ip(self):
-        return self.__ip
-
-    @ip.setter
-    def ip(self, ip):
-        self.__ip = ip
-
-    @property
-    def port(self):
-        return self.__port
-
-    @port.setter
-    def port(self, port):
-        self.__port = port
-
-    @property
-    def container_port(self):
-        return self.__container_port
-
-    @container_port.setter
-    def container_port(self, container_port):
-        self.__container_port = container_port
-
-    @property
-    def container_image(self):
-        return self.__container_image
-
-    @container_image.setter
-    def container_image(self, container_image):
-        self.__container_image = container_image
-
-    @property
-    def host(self):
-        return self.__host
-
-    @host.setter
-    def host(self, host):
-        self.__host = host
-
-    @property
-    def info(self):
-        return self.__info
-
-    @info.setter
-    def info(self, info):
-        self.__info = info
-
-    @property
-    def namespace(self):
-        return self.__namespace
-
-    @namespace.setter
-    def namespace(self, namespace):
-        self.__namespace = namespace
-
-
-class DeploymentStatus(Enum):
-    RUNNING = auto()
-    WAITING = auto()
-    FAILED = auto()
-    NOT_EXIST = auto()
-
-
-class DeployerException(Exception):
-    pass
-
-
-class KubernetesException(DeployerException):
-    pass
-
-
-class ResourceNotFoundException(DeployerException):
-    pass
-
-
-class CreateServiceException(KubernetesException):
-    pass
-
-
-class CreateDeploymentException(KubernetesException):
-    pass
-
-
-class DeleteServiceException(KubernetesException):
-    pass
-
-
-class DeleteDeploymentException(KubernetesException):
-    pass
+        return k8s.AppsV1Api(self.client).read_namespaced_deployment(self.uid, self.namespace)
