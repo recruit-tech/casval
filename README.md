@@ -26,6 +26,34 @@ pipenv install -d
 pipenv run server
 ```
 
+## Configurations
+
+| Variable Name | Default Value | Description | Note |
+| ------------- | ------------- | ----------- | ---- |
+| ADMIN_PASSWORD | admin-password | Password for entering CASVAL ORIGIN | <li>Need to set in `app.yaml` for GCP environment</li> |
+| CONFIG\_ENV\_FILE\_PATH | config.env | Relative file path of configuration file from the application root directory of CASVAL REM | <li>GCP environment only</li> <li>Need to set in `app.yaml`</li> |
+| DB_ENDPOINT | 127.0.0.1 | MySQL server endpoint | <li>Local environment only</li> |
+| DB_PORT | 3306 | MySQL server port | <li>Local environment only</li> |
+| DB\_INSTANCE\_NAME | - | Google Cloud SQL instance name | <li>GCP environment only</li> <li>Load from terraform state</li> |
+| DB_NAME | casval | MySQL database name | <li>Load from terraform state in GCP environment</li> |
+| DB_USER | root | MySQL user account name | <li>Load from terraform state in GCP environment</li> |
+| DB_PASSWORD | Passw0rd! | MySQL database password | <li>Load from terraform state in GCP environment</li> |
+| GCP\_PROJECT\_NAME | - | GCP project name that deploys CASVAL REM | <li>GCP environment only</li> <li>Load from terraform state</li> |
+| GCP\_REPORT\_STORAGE\_NAME | - | GCS bucket name that stores raw scan report file | <li>GCP environment only</li> <li>Load from terraform state</li> |
+| KUBERNETES\_MASTER\_SERVER | - | Kubernetes master endpoint of the REM's cluster | <li>GCP environment only</li> <li>Load from terraform state</li> |
+| KUBERNETES_NAMESPACE | default | Kuberenates namespace name | <li>GCP environment only</li> <li>Need to set in `app.yaml`</li> |
+| OPENVAS\_OMP\_ENDPOINT | 127.0.0.1 | OpenVAS OMP server endpoint | <li>Local environment only</li> |
+| OPENVAS\_OMP\_PORT | 9390 | OpenVAS OMP server port | <li>Need to set in `app.yaml` for GCP environment</li> |
+| OPENVAS\_OMP\_USERNAME | admin | OpenVAS server login user name | <li>Need to set in `app.yaml` for GCP environment</li> |
+| OPENVAS\_OMP\_PASSWORD | admin | OpenVAS server login password | <li>Need to set in `app.yaml` for GCP environment</li> |
+| OPENVAS\_SCAN\_ENDPOINT | 127.0.0.1 | OpenVAS scan source endpoint | <li>Load from terraform state in GCP environment</li> |
+| OPENVAS\_ALIVE\_TEST | Consider Alive | OpenVAS option specifies the method to check if a target is reachable | <li>Need to set in `app.yaml` for GCP environment</li> |
+| OPENVAS_PROFILE | Full and very deep | OpenVAS scan configuration profile | <li>Need to set in `app.yaml` for GCP environment</li> |
+| PASSWORD_SALT | password-salt | Salt string for password hash |  <li>Need to set in `app.yaml` for GCP environment</li> |
+| CORS\_PERMITTED\_ORIGINS | * | Origins that allow to send cross origin requests, that value is set to `Access-Control-Allow-Origin` response header | <li>Need to set in `app.yaml` for GCP environment</li> |
+| PERMITTED\_SOURCE\_IP\_RANGES | - | Comma separated source IP address ranges that allows to call restricted APIs | <li>Need to set in `app.yaml` for GCP environment</li> |
+| SCAN\_MAX\_PARALLEL\_SESSION | 1 | Max parallel scan session count | <li>Need to set in `app.yaml` for GCP environment</li> |
+| JWT\_SECRET\_KEY | super-secret | Secret key used for signing JWT credentials | <li>Need to set in `app.yaml` for GCP environment</li> |
 
 ## For Developers
 

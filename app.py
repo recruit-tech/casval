@@ -53,7 +53,8 @@ app = Flask(__name__)
 
 if Utils.is_gcp():
     # Use Cloud SQL for Google Cloud Platform
-    Utils.load_env_from_config_file(os.environ["CONFIG_ENV_FILE_PATH"])
+    config_file_path = os.getenv("CONFIG_ENV_FILE_PATH", "config.env")
+    Utils.load_env_from_config_file(config_file_path)
     app.config["DATABASE"] = MySQLDatabase(
         os.environ["DB_NAME"],
         unix_socket=os.path.join("/cloudsql", os.environ["DB_INSTANCE_NAME"]),
@@ -72,8 +73,8 @@ else:
 
 app.config["ADMIN_PASSWORD"] = os.getenv("ADMIN_PASSWORD", "admin-password")
 app.config["PERMITTED_SOURCE_IP_RANGES"] = os.getenv("PERMITTED_SOURCE_IP_RANGES", "")
-app.config["PERMITTED_ORIGINS"] = os.getenv("PERMITTED_ORIGINS", "*")
-app.config["JWT_SECRET_KEY"] = os.getenv("SECRET_KEY", "super-secret")
+app.config["CORS_PERMITTED_ORIGINS"] = os.getenv("CORS_PERMITTED_ORIGINS", "*")
+app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY", "super-secret")
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = 3 * 3600  # 3 hours
 app.config["JWT_IDENTITY_CLAIM"] = "sub"
 app.config["RESTPLUS_MASK_SWAGGER"] = False
@@ -86,7 +87,7 @@ db.init_app(app)
 jwt.init_app(app)
 jwt._set_error_handler_callbacks(api)
 marshmallow.init_app(app)
-CORS(app, origins=app.config["PERMITTED_ORIGINS"])
+CORS(app, origins=app.config["CORS_PERMITTED_ORIGINS"])
 
 with db.database:
     db.database.create_tables([AuditTable, ContactTable, ScanTable, TaskTable, VulnTable, ResultTable])

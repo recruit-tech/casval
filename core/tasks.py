@@ -26,7 +26,6 @@ if Utils.is_gcp():
 else:
     from .storages import LocalFileStorage as Storage
 
-SCAN_MAX_PARALLEL_SESSION = os.getenv("SCAN_MAX_PARALLEL_SESSION", 1)
 SCAN_REPORT_KEY_NAME = "{audit_id:08}-{scan_id:08}-{task_uuid:.8}.xml"
 SCAN_MAX_DURATION_IN_HOUR = 24
 
@@ -51,6 +50,7 @@ class BaseTask:
                     app.logger.info("Delete task due to cancellation, task={task}".format(task=task))
                     self._update(task, next_progress=TaskProgress.DELETED.name)
                     continue
+                app.logger.info("Now processing, task={task}".format(task=task))
                 is_continuable = self._process(task)
                 if not is_continuable:
                     break
@@ -177,7 +177,8 @@ class PendingTask(BaseTask):
 
     def _process(self, task):
         running_task_num = self._get_running_task_count()
-        if running_task_num >= SCAN_MAX_PARALLEL_SESSION:
+        max_parallel_scan_num = int(os.getenv("SCAN_MAX_PARALLEL_SESSION", "1"))
+        if running_task_num >= max_parallel_scan_num:
             app.logger.info("Abandoned to launch scan, already running {} task(s).".format(running_task_num))
             return False
 
@@ -219,7 +220,7 @@ class PendingTask(BaseTask):
         except ScanServerException:
             # FIXME: Need to handle persistent server exception here
             app.logger.warn(
-                "Scan server error during launch. We consider the error is due to OpenVAS server update for the time being."
+                "Scan server error during launch. We consider the error is due to OpenVAS server update."
             )
 
         return True

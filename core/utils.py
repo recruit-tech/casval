@@ -98,4 +98,4 @@ class Utils:
 
     @staticmethod
     def is_gcp():
-        return bool(os.getenv("CONFIG_ENV_FILE_PATH", ""))
+        return bool(os.getenv("GAE_ENV", ""))

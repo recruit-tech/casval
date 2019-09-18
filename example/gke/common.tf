@@ -9,6 +9,11 @@ provider "google-beta" {
   version = "~> 2.5.0"
 }
 
+data "google_compute_zones" "available" {
+  region = "${var.region}"
+  status = "UP"
+}
+
 output "DB_NAME" {
   value = "${google_sql_database.casval.name}"
 }
@@ -33,11 +38,10 @@ output "GCP_REPORT_STORAGE_NAME" {
   value = "${google_storage_bucket.report_storage.id}"
 }
 
-output "PASSWORD_SALT" {
-  value = "${random_string.password_salt.result}"
-}
-
-output "NAT_EXTERNAL_IP" {
+output "OPENVAS_SCAN_ENDPOINT" {
   value = "${google_compute_address.casval_cluster_nat_address.address}"
 }
 
+output "KUBERNETES_MASTER_SERVER" {
+  value = "https://${google_container_cluster.casval_cluster.endpoint}"
+}

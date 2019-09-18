@@ -62,5 +62,5 @@ resource "google_container_cluster" "casval_cluster" {
 
   subnetwork = "${google_compute_subnetwork.casval_cluster_nat_subnetwork.self_link}"
   project = "${var.project}"
-  location = "${var.region}"
+  location = "${data.google_compute_zones.available.names[0]}"
 }
