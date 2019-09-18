@@ -33,12 +33,4 @@ resource "google_sql_database" "casval" {
   collation = "utf8mb4_unicode_ci"
 }
 
-resource "random_string" "password_salt" {
-  length      = 32
-  min_upper   = 4
-  min_lower   = 4
-  min_numeric = 4
-  special     = false
-}
-
 resource "random_pet" "bucker_suffix" {}

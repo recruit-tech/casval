@@ -1,5 +1,10 @@
 service: rem
 runtime: python37
+entrypoint: gunicorn -b :$PORT -t 90 app:app
 
 env_variables:
+  ADMIN_PASSWORD: 'admin-password'
   CONFIG_ENV_FILE_PATH: 'config.env'
+  PASSWORD_SALT: 'password-salt'
+  JWT_SECRET_KEY: 'super-secret'
+  SCAN_MAX_PARALLEL_SESSION: 1
