@@ -1,5 +1,6 @@
 import csv
 import tempfile
+from datetime import timedelta
 
 from flask import Response
 from flask import abort
@@ -120,7 +121,7 @@ class VulneravilityListDownload(Resource):
     @Authorizer.admin_token_required
     def get(self):
         """Download all vulnerability list"""
-        schema = VulnListInputSchema(only=["fix_required", "keyword"])
+        schema = VulnListInputSchema(only=["tz_offset", "fix_required", "keyword"])
         params, errors = schema.load(request.args)
         if errors:
             abort(400, errors)
@@ -166,6 +167,8 @@ class VulneravilityListDownload(Resource):
             writer.writeheader()
             for vuln in vuln_query.dicts():
                 vuln["description"] = Utils.format_openvas_description(vuln["description"])
+                vuln["created_at"] = vuln["created_at"] + timedelta(minutes=params["tz_offset"])
+                vuln["updated_at"] = vuln["updated_at"] + timedelta(minutes=params["tz_offset"])
                 writer.writerow(vuln)
             f.flush()
             f.seek(0)

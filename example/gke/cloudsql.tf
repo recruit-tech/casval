@@ -17,6 +17,10 @@ resource "google_sql_database_instance" "master" {
       name  = "default_time_zone"
       value = "+00:00"
     }
+
+    backup_configuration {
+      enabled = true
+    }
   }
 }
 

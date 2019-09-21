@@ -55,7 +55,7 @@ class KubernetesDeployer(Deployer):
 
     OPENVAS_CONTAINER_IMAGE = "mikesplain/openvas:9"
     CONTAINER_USE_CPU_LIMIT = "400m"
-    CONTAINER_USE_MEMORY_LIMIT = "2.5Gi"
+    CONTAINER_USE_MEMORY_LIMIT = "4Gi"
     DEFAULT_SERVICE_PORT = 443
     GCP_METADATA_API_TOKEN_ENDPOINT = (
         "http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token"
