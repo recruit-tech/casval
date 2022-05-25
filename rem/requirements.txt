@@ -31,7 +31,7 @@ peewee==3.10.0
 protobuf==3.9.1
 pyasn1-modules==0.2.6
 pyasn1==0.4.7
-pyjwt==1.7.1
+pyjwt==2.4.0
 pyrsistent==0.15.4
 python-dateutil==2.8.0
 pytz==2019.2
