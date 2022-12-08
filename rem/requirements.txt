@@ -2,7 +2,7 @@
 aniso8601==7.0.0
 attrs==19.1.0
 cachetools==3.1.1
-certifi==2019.6.16
+certifi==2022.12.7
 chardet==3.0.4
 click==7.0
 decorator==4.4.0
